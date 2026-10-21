@@ -1,0 +1,74 @@
+# Builds the site from the Google Drive folder and publishes it with GitHub Pages.
+# Runs on every push, once a day (to pick up photographs added to Drive), and on demand
+# from the Actions tab (Publish → Run workflow).
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 9 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Originals, web versions and the font subset are kept between runs, so only new
+      # photographs are downloaded and processed.
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .cache/drive
+            .cache/derivatives
+            .cache/fonts
+          key: photographs-${{ github.run_id }}
+          restore-keys: photographs-
+
+      - name: Copy photographs from Google Drive
+        run: npm run sync
+        env:
+          DRIVE_FOLDER: ${{ secrets.DRIVE_FOLDER }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+
+      - name: Prepare web versions and fonts
+        run: npm run content
+        env:
+          DRIVE_FOLDER: ${{ secrets.DRIVE_FOLDER }}
+
+      - run: npx astro build
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

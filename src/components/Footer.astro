@@ -1,0 +1,12 @@
+---
+import { facts, site } from '../lib/archive';
+
+const { first, last } = facts();
+const years = [first?.en.slice(-4), last?.en.slice(-4)].filter(Boolean);
+const range = [...new Set(years)].join('–');
+---
+
+<footer class="site-footer small">
+  <span>© {range} {site.name.en}</span>
+  {site.contact?.email && <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>}
+</footer>

@@ -1,0 +1,56 @@
+# Site-wide settings. Collection words, sentences and sequences live in collections.yaml.
+
+name:
+  en: Jia
+  zh: Jia
+
+# Used for <meta name="description"> on the home page.
+description:
+  en: Photographs by Jia.
+  zh: Jia 的照片。
+
+# Where the site is published: the domain, and the folder under it.
+# GitHub Pages serves the ChiaPatricia/photographs repository at luckyjiaxu.com/photographs/.
+url: https://luckyjiaxu.com
+base: /photographs
+
+# Optional. Leave empty to show nothing.
+contact:
+  email: ""
+  instagram: ""
+
+# The Google Drive folder is not written here, because this file is public.
+# It is read from the DRIVE_FOLDER environment variable (a GitHub secret, or .env locally).
+
+# Some camera clocks are not set to the time zone the photographs were taken in.
+# The Canon's clock reads 12 hours ahead of local time in New York (its timestamps
+# put the sunset at 06:03 and the village clock in _MG_2884 reads 4:10 at "04:10").
+# Offsets are applied before times are shown or used.
+cameras:
+  Canon EOS 70D:
+    clock_offset_hours: -12
+  # The Olympus records its model as "u1020,S1020".
+  u1020,S1020:
+    name: Olympus μ1020
+
+# The home page shows the photograph from this pool whose time of day is closest
+# to the visitor's own clock. `default` is used without JavaScript and for search engines.
+cover:
+  default: 03-light/_MG_2979.JPG
+  pool:
+    - 04-places/_MG_2726.JPG
+    - 01-leaves/_MG_2810.JPG
+    - 01-leaves/_MG_2818.JPG
+    - 03-light/_MG_2942.JPG
+    - 03-light/_MG_2979.JPG
+    - 03-light/_MG_3023.JPG
+    - 03-light/_MG_3079.JPG
+    - 03-light/_MG_3094.JPG
+    - 04-places/_MG_3124.JPG
+
+# A short photograph for the About page (folder/file), and an optional line of text.
+about:
+  photo: 01-leaves/_MG_2798.JPG
+  fragment:
+    en: ""
+    zh: ""

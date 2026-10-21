@@ -1,0 +1,14 @@
+---
+import PlatePage from '../../../../components/PlatePage.astro';
+import { collections } from '../../../../lib/archive';
+
+export function getStaticPaths() {
+  return collections.flatMap((collection) =>
+    collection.photos.map((photo) => ({ params: { collection: collection.slug, plate: photo.id }, props: { collection, photo } })),
+  );
+}
+
+const { collection, photo } = Astro.props;
+---
+
+<PlatePage lang="zh" collection={collection} photo={photo} />

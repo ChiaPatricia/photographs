@@ -1,0 +1,163 @@
+# One entry per folder in the Google Drive folder. The key is the folder name.
+#
+#   slug        URL of the collection (/turning/). Keep it stable once shared.
+#   status      draft | final. Drafts are proposals until the photographer approves them.
+#   word        The collection's single word, in each language. Chinese is not a translation.
+#   sentence    One sentence, shown quietly inside the sequence.
+#   place       Default place for every photograph in the folder (optional).
+#   sequence    The order on the site. Each item is a file name, or a file / pair with
+#               a layout hint. Photographs in the folder but not listed here are added
+#               after these, in the order they were taken, with an automatic layout.
+#               Folders that start with "_" (like _hold) never appear on the site.
+#   photos      Optional per-photograph text: alt, place, note.
+#   tint        Optional hue (0–360) for the page's faint tint; otherwise taken from the photographs.
+#   behaviour   Optional. `shy`: photographs edge away from a cursor that rushes at them.
+#
+# Layout hints: full | large | medium | small, align: left | center | right.
+# Pairs: { pair: [a, b], layout: even | offset }.
+
+01-leaves:
+  slug: turning
+  status: draft
+  word:
+    en: Turning
+    zh: 转色
+  sentence:
+    en: The yellow is in the leaf all summer, hidden by the green; the red is made new in autumn, and botanists still disagree about why.
+    zh: 黄色整个夏天都在叶子里，只是被绿色盖住了；红色要到秋天才新合成，为什么，科学家至今还在争论。
+  sequence:
+    - { file: _MG_2813.jpg, layout: full }
+    - { file: _MG_2843.JPG, layout: small, align: right }
+    - { file: _MG_2837.JPG, layout: large, align: left }
+    - { pair: [_MG_2818.JPG, _MG_2828.JPG], layout: offset }
+    - { file: _MG_2729.JPG, layout: small, align: left }
+    - { file: _MG_2829.JPG, layout: large, align: right }
+    - { file: _MG_2810.JPG, layout: full }
+    - { file: _MG_2798.JPG, layout: small, align: center }
+  photos:
+    _MG_2813.jpg:
+      alt: { en: Looking straight up a trunk into a green canopy, sky at the edges., zh: 顺着树干往上看，满眼绿色的树冠，边缘露出天空。 }
+    _MG_2843.JPG:
+      alt: { en: Yellow-green maple leaves lit from behind against a dark background., zh: 逆光下黄绿色的槭树叶，背景很暗。 }
+    _MG_2837.JPG:
+      alt: { en: A path under tall trees, the sun showing through the leaves., zh: 高大的树下一条小路，太阳从树叶间透出来。 }
+    _MG_2818.JPG:
+      alt: { en: Orange and yellow maple leaves with a gap of dark between them., zh: 橙色和黄色的槭树叶，中间隔着一片暗处。 }
+    _MG_2828.JPG:
+      alt: { en: A branch of yellow and orange maple leaves reaching out of the dark., zh: 一枝黄橙相间的槭树叶从暗处伸出来。 }
+    _MG_2729.JPG:
+      alt: { en: A single orange tree on a lawn under a clear blue sky., zh: 蓝天下，草坪上一棵橙色的树。 }
+    _MG_2829.JPG:
+      alt: { en: Red maple leaves against a pale sky, a dark mass of branches to one side., zh: 浅色天空下的红色槭树叶，一侧是深色的枝叶。 }
+    _MG_2810.JPG:
+      alt: { en: Red maple leaves and black branches against a deep blue sky., zh: 深蓝天空下，红色的槭树叶和黑色的枝条。 }
+    _MG_2798.JPG:
+      alt: { en: A hand holds up a single red maple leaf in front of the trees., zh: 一只手在树前举起一片红色的槭树叶。 }
+
+02-animals:
+  slug: cache
+  status: draft
+  behaviour: shy
+  word:
+    en: Cache
+    zh: 藏
+  sentence:
+    en: With other squirrels nearby, a grey squirrel will sometimes dig a hole, cover it up, and leave nothing inside.
+    zh: 附近有别的松鼠时，灰松鼠有时会挖一个坑，再填好，里面什么也没放。
+  place:
+    en: Sleepy Hollow, New York
+    zh: 纽约州睡谷
+  sequence:
+    - { file: _MG_2962.JPG, layout: large, align: left }
+    - { file: _MG_2963.JPG, layout: small, align: right }
+    - { file: _MG_3056.JPG, layout: full }
+    - { file: _MG_3068.jpg, layout: medium, align: right }
+  photos:
+    _MG_2962.JPG:
+      alt: { en: A grey squirrel eating an acorn on a lawn scattered with leaves., zh: 落叶草地上，一只灰松鼠在吃橡子。 }
+      note: { en: Eastern grey squirrel., zh: 灰松鼠。 }
+    _MG_2963.JPG:
+      alt: { en: Acorns and empty acorn caps on the ground., zh: 地上的橡子和空了的壳斗。 }
+    _MG_3056.JPG:
+      alt: { en: A tree of golden leaves against the blue sky, a small bird among the branches., zh: 金黄的树叶衬着蓝天，枝间藏着一只小鸟。 }
+      note: { en: There is a bird in this one., zh: 这张里有一只鸟。 }
+    _MG_3068.jpg:
+      alt: { en: A northern mockingbird perched among leaves, beak open., zh: 一只小嘲鸫停在枝叶间，张着嘴。 }
+      note: { en: Northern mockingbird. A male may learn around two hundred songs., zh: 小嘲鸫。一只雄鸟一生能学会两百种左右的鸣唱。 }
+
+03-light:
+  slug: glitter
+  status: draft
+  word:
+    en: Glitter
+    zh: 波光
+  sentence:
+    en: In 1951 two oceanographers photographed the sun's glitter from a B-17 off Maui, and found that it spreads wider as the wind rises.
+    zh: 1951年，两位海洋学家从毛伊岛外的一架B-17上拍摄海面的阳光反光，发现风越大，这片光铺得越开。
+  place:
+    en: Sleepy Hollow, New York
+    zh: 纽约州睡谷
+  sequence:
+    - { file: _MG_2979.JPG, layout: full }
+    - { file: _MG_3015.JPG, layout: small, align: left }
+    - { pair: [_MG_2942.JPG, _MG_3004.JPG], layout: offset }
+    - { file: _MG_2998.JPG, layout: small, align: right }
+    - { file: _MG_3023.JPG, layout: large, align: left }
+    - { pair: [_MG_3067.JPG, _MG_3053.JPG], layout: even }
+    - { file: _MG_3079.JPG, layout: large, align: right }
+    - { file: _MG_3094.JPG, layout: medium, align: center }
+  photos:
+    _MG_2979.JPG:
+      alt: { en: Sunlight glittering on the surface of the river., zh: 阳光在河面上闪烁。 }
+    _MG_3015.JPG:
+      alt: { en: Sun glitter on the water seen through a shrub growing on the rocks., zh: 透过岸边石头上的灌木，看到水面上的反光。 }
+    _MG_2942.JPG:
+      alt: { en: Under a dark tree by the river two people sit at a picnic table; the water is bright with sun., zh: 河边的大树下，两个人坐在野餐桌旁，水面一片亮光。 }
+    _MG_3004.JPG:
+      alt: { en: A man fishing from the rocks looks up, the sun's reflection beside him., zh: 一个钓鱼的人站在礁石上抬头看，身旁是太阳的倒影。 }
+    _MG_2998.JPG:
+      alt: { en: A seawall curves out into the calm river, trees along it., zh: 防波堤伸进平静的河面，堤上一排树。 }
+    _MG_3023.JPG:
+      alt: { en: Two kayakers paddle away under an overhanging branch., zh: 两个人划着皮划艇远去，头顶垂着一根树枝。 }
+    _MG_3067.JPG:
+      alt: { en: A tall tree with orange leaves; the lighthouse is small at the bottom of the frame., zh: 一棵高大的树，橙色的叶子；灯塔很小，在画面底部。 }
+    _MG_3053.JPG:
+      alt: { en: The white lighthouse in the river, orange shrubs on the shore in late light., zh: 河中的白色灯塔，岸边的灌木在傍晚的光里发橙。 }
+    _MG_3079.JPG:
+      alt: { en: A cyclist in silhouette rides along the river at sunset., zh: 日落时分，一个骑车人的剪影沿河而过。 }
+    _MG_3094.JPG:
+      alt: { en: The river just after the sun has gone behind the hills., zh: 太阳刚落到山后，河面暗下来。 }
+
+04-places:
+  # Sleepy Hollow's Halloween photographs (the village sign, the skeleton horse, the clock with
+  # pumpkins, the jack-o'-lanterns) were taken out at the photographer's request and are in _hold.
+  slug: still
+  status: draft
+  word:
+    en: Still
+    zh: 还在
+  sentence:
+    en: The bridge that made the lighthouse unnecessary has since been taken down; the lighthouse is still here.
+    zh: 让这座灯塔退役的那座桥，已经拆了；灯塔还在。
+  sequence:
+    - { file: _MG_2968.JPG, layout: large, align: left }
+    - { file: _MG_2726.JPG, layout: large, align: right }
+    - { pair: [_MG_2725.JPG, _MG_2760.JPG], layout: offset }
+    - { file: _MG_3124.JPG, layout: full }
+  photos:
+    _MG_2726.JPG:
+      alt: { en: A lawn, trees and the river seen through a diamond-paned window., zh: 透过菱形格窗看到的草坪、树和河。 }
+      place: { en: Tarrytown, New York, zh: 纽约州塔里敦 }
+    _MG_2725.JPG:
+      alt: { en: A Gothic dining room with chandeliers and an autumn table., zh: 哥特式的餐厅，吊灯，秋天布置的餐桌。 }
+      place: { en: Tarrytown, New York, zh: 纽约州塔里敦 }
+    _MG_2760.JPG:
+      alt: { en: A glass oil lamp painted with flowers, in front of a window onto trees., zh: 一盏画着花的玻璃油灯，窗外是树。 }
+      place: { en: Tarrytown, New York, zh: 纽约州塔里敦 }
+    _MG_2968.JPG:
+      alt: { en: Two people on a bench by the river, the lighthouse and the bridge beyond., zh: 河边长椅上的两个人，远处是灯塔和大桥。 }
+      place: { en: Sleepy Hollow, New York, zh: 纽约州睡谷 }
+      note: { en: The lighthouse was first lit in 1883., zh: 这座灯塔1883年第一次点亮。 }
+    _MG_3124.JPG:
+      alt: { en: The bridge at dusk, a ship and a distant skyline beneath it., zh: 黄昏的大桥，桥下一艘船和远处的城市天际线。 }
+      place: { en: Sleepy Hollow, New York, zh: 纽约州睡谷 }

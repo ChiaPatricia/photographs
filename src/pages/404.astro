@@ -1,0 +1,25 @@
+---
+// One page for both languages; the remembered language is applied before it paints.
+import Base from '../layouts/Base.astro';
+import T from '../components/T.astro';
+import Photo from '../components/Photo.astro';
+import { BASE, collections, home } from '../lib/archive';
+import { ui } from '../lib/i18n';
+
+const all = collections.flatMap((collection) => collection.photos.map((photo) => ({ collection, photo })));
+const night = all.find(({ photo }) => (photo.taken ?? '').slice(11, 13) >= '19') ?? all.at(-1)!;
+---
+
+<Base lang="en" page="404" title={{ en: 'Not here — Jia', zh: '不在这里 — Jia' }} path={{ en: `${BASE}/404/`, zh: `${BASE}/404/` }}>
+  <div class="page">
+    <Photo photo={night.photo} collection={night.collection} lang="en" sizes="(max-width: 699px) 62vw, 22vw" eager />
+    <div class="text">
+      <h1 class="serif"><T t={ui.notFound} /></h1>
+      <p class="small">
+        <a href={home('en')} data-href-en={home('en')} data-href-zh={home('zh')}><T t={ui.index} /></a>
+        &nbsp;·&nbsp;
+        <a href={home('en')} data-wander><T t={ui.elsewhere} /></a>
+      </p>
+    </div>
+  </div>
+</Base>

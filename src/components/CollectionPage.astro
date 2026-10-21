@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import T from './T.astro';
+import Photo from './Photo.astro';
+import Viewer from './Viewer.astro';
+import Sentence from './Sentence.astro';
+import {
+  altText,
+  collectionHref,
+  collections,
+  jpeg,
+  line,
+  photoCount,
+  plateHref,
+  plateLabel,
+  span,
+  technical,
+  type Collection,
+} from '../lib/archive';
+import { compose, sizesFor } from '../lib/compose';
+import { time, ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  collection: Collection;
+}
+
+const { lang, collection: c } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const spreads = compose(c);
+const next = collections[c.number % collections.length];
+const plate = (p: (typeof c.photos)[number]) => ({ en: plateHref('en', c, p), zh: plateHref('zh', c, p) });
+
+const data = {
+  collection: { slug: c.slug, number: c.number, behaviour: (c as any).behaviour ?? null, href: { en: collectionHref('en', c), zh: collectionHref('zh', c) } },
+  photos: c.photos.map((p) => ({
+    id: p.id,
+    hash: p.hash,
+    w: p.w,
+    h: p.h,
+    r: p.ratio,
+    widths: p.widths,
+    color: p.color,
+    lqip: p.lqip,
+    alt: altText(c, p),
+    line: line(p),
+    tech: technical(p),
+    note: p.note,
+    n: plateLabel(c, p),
+    href: plate(p),
+  })),
+};
+
+// The plate list repeats a place only when it changes.
+let lastPlace = '';
+const plates = c.photos.map((p, i) => {
+  const place = p.place?.en ?? '';
+  const show = place !== lastPlace;
+  lastPlace = place;
+  return { p, i, show };
+});
+const dates = span(c);
+---
+
+<Base
+  lang={lang}
+  page="collection"
+  title={{ en: `${c.word.en} — Jia`, zh: `${c.word.zh} — Jia` }}
+  description={c.sentence}
+  path={{ en: collectionHref('en', c), zh: collectionHref('zh', c) }}
+  tint={c.tint}
+  image={jpeg(c.photos[0], 1200)}
+  data={data}
+  current={c.slug}
+>
+  <section class="opening" aria-labelledby="title">
+    <span class="num">{pad(c.number)}</span>
+    <h1 id="title">
+      <span class="w" data-l="en" lang="en">{c.word.en}</span>
+      <span class="w" data-l="zh" lang="zh-Hans">{c.word.zh}</span>
+      <span class="z" data-l="en" lang="zh-Hans">{c.word.zh}</span>
+      <span class="z" data-l="zh" lang="en">{c.word.en}</span>
+    </h1>
+    <p class="meta small">
+      <span><T t={photoCount(c)} /></span>
+      {dates && <span><T t={dates} /></span>}
+      {import.meta.env.DEV && c.status !== 'final' && <span class="draft"><T t={ui.draft} /></span>}
+    </p>
+  </section>
+
+  <div class="seq" data-behaviour={(c as any).behaviour ?? undefined}>
+    {
+      spreads.map((s, k) => {
+        if (s.kind === 'sentence')
+          return (
+            <div class={`spread sentence space-${s.space}`}>
+              <p class="serif reveal">
+                <Sentence t={c.sentence!} />
+              </p>
+            </div>
+          );
+        if (s.kind === 'single')
+          return (
+            <div class:list={['spread single', `size-${s.size}`, `align-${s.align}`, `space-${s.space}`, s.photo.ratio < 1 && 'is-portrait']}>
+              <Photo
+                photo={s.photo}
+                collection={c}
+                lang={lang}
+                id={s.photo.id}
+                sizes={sizesFor(s.size, s.photo.ratio)}
+                href={plate(s.photo)}
+                eager={k === 0}
+                priority={k === 0}
+              />
+            </div>
+          );
+        const [a, b] = s.photos;
+        const stack = a.ratio + b.ratio > 1.6;
+        return (
+          <div
+            class:list={['spread', `pair-${s.style}`, `space-${s.space}`, stack && 'is-stack']}
+            style={`--r1:${a.ratio};--r2:${b.ratio}`}
+          >
+            <Photo
+              photo={a}
+              collection={c}
+              lang={lang}
+              id={a.id}
+              sizes={s.style === 'even' ? sizesFor('pair-even', a.ratio, b.ratio) : sizesFor('pair-offset-a', a.ratio)}
+              href={plate(a)}
+              eager={k === 0}
+            />
+            <Photo
+              photo={b}
+              collection={c}
+              lang={lang}
+              id={b.id}
+              sizes={s.style === 'even' ? sizesFor('pair-even', b.ratio, a.ratio) : sizesFor('pair-offset-b', b.ratio)}
+              href={plate(b)}
+              delay={160}
+            />
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <section class="plates small" aria-labelledby="plates-title">
+    <h2 id="plates-title" class="small"><T t={ui.plates} /></h2>
+    <ol>
+      {
+        plates.map(({ p, i, show }) => (
+          <li data-id={p.id}>
+            <a href={plate(p)[lang]} data-href-en={plate(p).en} data-href-zh={plate(p).zh} data-open={p.id}>
+              <span class="n">{pad(i + 1)}</span>
+              <span>{time(p.taken)}</span>
+              {show && p.place && <T t={p.place} />}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <nav class="next small" aria-label="Next">
+    <a class="to" href={collectionHref(lang, next)} data-href-en={collectionHref('en', next)} data-href-zh={collectionHref('zh', next)}>
+      <span class="muted">
+        <T t={ui.next} /> · {pad(next.number)}
+      </span>
+      <span class="w serif">
+        <T t={next.word} />
+      </span>
+    </a>
+  </nav>
+
+  <Viewer slot="after" />
+</Base>

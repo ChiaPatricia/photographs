@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.astro/
+.cache/
+# Originals stay in Google Drive; the local mirror is never committed.
+photography/
+# Generated from the photographs and content/ by `npm run content`.
+public/media/
+public/fonts/
+src/data/archive.json
+src/styles/generated/
+.env
+.DS_Store
+# Local tooling
+.claude/

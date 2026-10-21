@@ -1,0 +1,15 @@
+---
+// A collection's sentence. Chinese clauses are kept whole where the line allows,
+// so lines break at punctuation rather than leaving one or two characters behind.
+import type { Text } from '../lib/i18n';
+
+interface Props {
+  t: Text;
+}
+
+const { t } = Astro.props;
+const clauses = t.zh.split(/(?<=[，；：、])|(?<=——)/u).filter(Boolean);
+---
+
+<span data-l="en" lang="en">{t.en}</span>
+<span data-l="zh" lang="zh-Hans">{clauses.map((c) => <span class="clause">{c}</span>)}</span>

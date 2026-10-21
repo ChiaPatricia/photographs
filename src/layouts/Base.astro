@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import serifFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import sansFont from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { BASE, collections, plateHref, site } from '../lib/archive';
+import { htmlLang, type Lang, type Text } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  page: 'home' | 'collection' | 'plate' | 'about' | '404';
+  title: Text;
+  description?: Text | null;
+  path: { en: string; zh: string };
+  tint?: { h: number; c: number };
+  image?: string;
+  data?: Record<string, unknown>;
+  current?: string; // collection slug, if any
+}
+
+const { lang, page, title, description, path, tint, image, data = {}, current } = Astro.props;
+const base = site.url ? site.url.replace(/\/$/, '') : '';
+const abs = (p: string) => (base ? `${base}${p}` : p);
+const desc = description ?? site.description;
+
+// A collection's page takes the faintest tint of its own photographs.
+const tintStyle = tint ? `--paper-h:${tint.h};--paper-c:${Math.min(0.011, 0.0028 + tint.c * 0.12).toFixed(4)}` : undefined;
+
+// Every photograph, for "Elsewhere". Without JavaScript the link goes to one chosen at build time.
+const all = collections.flatMap((c) => c.photos.map((p) => [c.slug, p.id, plateHref('en', c, p), plateHref('zh', c, p)]));
+const pool = all.filter(([slug]) => slug !== current);
+let seed = 0;
+for (const ch of path.en) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
+const pick = pool[seed % pool.length] ?? all[0];
+const wander = { en: pick[2], zh: pick[3] };
+
+const json = JSON.stringify({ page, lang, ...data, all }).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html
+  lang={htmlLang(lang)}
+  data-lang={lang}
+  data-page={page}
+  data-base={BASE}
+  data-title-en={title.en}
+  data-title-zh={title.zh}
+  data-desc-en={desc?.en}
+  data-desc-zh={desc?.zh}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title[lang]}</title>
+    {desc && <meta name="description" content={desc[lang]} />}
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f5f4f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href={`${BASE}/favicon.svg`} type="image/svg+xml" />
+    {base && <link rel="canonical" href={abs(path[lang])} />}
+    <link rel="alternate" hreflang="en" href={abs(path.en)} />
+    <link rel="alternate" hreflang="zh-Hans" href={abs(path.zh)} />
+    <link rel="alternate" hreflang="x-default" href={abs(path.en)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title[lang]} />
+    {desc && <meta property="og:description" content={desc[lang]} />}
+    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    {base && image && <meta property="og:image" content={abs(image)} />}
+    {base && image && <meta name="twitter:card" content="summary_large_image" />}
+    {page === '404' && <meta name="robots" content="noindex" />}
+    <link rel="preload" href={serifFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Before first paint: mark JavaScript as available and honour a remembered language,
+      // or a Chinese browser arriving at the front door.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var want = localStorage.getItem('jia:lang');
+          var now = d.dataset.lang;
+          var base = d.dataset.base || '';
+          var p = location.pathname;
+          var rest = p.indexOf(base) === 0 ? p.slice(base.length) || '/' : p;
+          if (!want && now === 'en' && rest === '/' && /^zh/i.test(navigator.language || '')) want = 'zh';
+          if ((want === 'en' || want === 'zh') && want !== now) {
+            d.dataset.lang = want;
+            d.lang = want === 'zh' ? 'zh-Hans' : 'en';
+            d.dataset.switched = '1';
+            document.title = d.getAttribute('data-title-' + want) || document.title;
+            if (d.dataset.page !== '404')
+              history.replaceState(history.state, '', base + (want === 'zh' ? (rest.indexOf('/zh/') === 0 ? rest : '/zh' + rest) : rest.replace(/^\/zh\//, '/')) + location.search + location.hash);
+          }
+          if (localStorage.getItem('jia:seen')) d.classList.add('seen');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body style={tintStyle} data-collection={current}>
+    <Header lang={lang} path={path} page={page} wander={wander} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <slot name="after" />
+    <script type="application/json" id="jia-data" set:html={json} />
+    <script>
+      import '../scripts/app.ts';
+    </script>
+  </body>
+</html>

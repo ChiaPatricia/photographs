@@ -1,0 +1,55 @@
+---
+// One photograph: AVIF with a JPEG fallback, sized by its layout, placed on a blurred
+// placeholder of itself so nothing jumps while it loads.
+import type { Collection, Photo } from '../lib/archive';
+import { altText, jpeg, srcset } from '../lib/archive';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  photo: Photo;
+  collection: Collection;
+  lang: Lang;
+  sizes: string;
+  href?: { en: string; zh: string };
+  eager?: boolean;
+  priority?: boolean;
+  class?: string;
+  reveal?: boolean;
+  delay?: number;
+  id?: string;
+}
+
+const { photo: p, collection, lang, sizes, href, eager = false, priority = false, class: className, reveal = true, delay = 0, id } = Astro.props;
+const alt = altText(collection, p);
+const style = `--r:${p.ratio};--c:${p.color};background-image:url(${p.lqip})${delay ? `;--delay:${delay}ms` : ''}`;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  class:list={['ph', reveal && 'reveal', className]}
+  style={style}
+  id={id}
+  data-id={p.id}
+  href={href?.[lang]}
+  data-href-en={href?.en}
+  data-href-zh={href?.zh}
+>
+  <picture>
+    <source type="image/avif" srcset={srcset(p, 'avif')} sizes={sizes} />
+    <img
+      src={jpeg(p, 1200)}
+      srcset={srcset(p, 'jpg')}
+      sizes={sizes}
+      width={p.w}
+      height={p.h}
+      alt={alt[lang]}
+      data-alt-en={alt.en}
+      data-alt-zh={alt.zh}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'auto' : 'async'}
+      fetchpriority={priority ? 'high' : undefined}
+      onload="this.classList.add('is-loaded')"
+      onerror="this.classList.add('is-loaded')"
+    />
+  </picture>
+</Tag>

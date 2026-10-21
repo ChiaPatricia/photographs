@@ -1,0 +1,39 @@
+---
+import T from './T.astro';
+import { aboutHref, home, site } from '../lib/archive';
+import { ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  path: { en: string; zh: string };
+  page: string;
+  wander: { en: string; zh: string };
+}
+
+const { lang, path, page, wander } = Astro.props;
+---
+
+<a class="skip small" href="#main"><T t={ui.skip} /></a>
+<header class="site-header small">
+  <a class="mark" href={home(lang)} data-href-en={home('en')} data-href-zh={home('zh')} aria-current={page === 'home' ? 'page' : undefined}>
+    {site.name.en}
+  </a>
+  <nav class="nav" aria-label="Site">
+    <a href={wander[lang]} data-href-en={wander.en} data-href-zh={wander.zh} data-wander>
+      <T t={ui.elsewhere} />
+    </a>
+    <a
+      href={aboutHref(lang)}
+      data-href-en={aboutHref('en')}
+      data-href-zh={aboutHref('zh')}
+      aria-current={page === 'about' ? 'page' : undefined}
+    >
+      <T t={ui.about} />
+    </a>
+    <span class="lang">
+      <a href={path.zh} data-switch="zh" hreflang="zh-Hans" lang="zh-Hans">中</a>
+      <span aria-hidden="true">/</span>
+      <a href={path.en} data-switch="en" hreflang="en" lang="en">EN</a>
+    </span>
+  </nav>
+</header>

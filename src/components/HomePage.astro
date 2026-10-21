@@ -1,0 +1,166 @@
+---
+import Base from '../layouts/Base.astro';
+import T from './T.astro';
+import {
+  altText,
+  archive,
+  collectionHref,
+  collections,
+  home,
+  jpeg,
+  minutes,
+  photoCount,
+  plateHref,
+  resolve,
+  srcset,
+} from '../lib/archive';
+import { count, time, ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// The cover: whichever photograph in the pool was taken closest to the visitor's time of day.
+const fallback = resolve(archive.cover.default) ?? { collection: collections[0], photo: collections[0].photos[0] };
+const pool = (archive.cover.pool.length ? archive.cover.pool : [archive.cover.default]).map(resolve).filter((x) => x !== null);
+const covers = pool.map(({ collection: c, photo: p }) => ({
+  min: minutes(p),
+  r: p.ratio,
+  color: p.color,
+  lqip: p.lqip,
+  avif: srcset(p, 'avif'),
+  jpg: srcset(p, 'jpg'),
+  src: jpeg(p, 1200),
+  w: p.w,
+  h: p.h,
+  alt: altText(c, p),
+  word: c.word,
+  time: time(p.taken),
+  href: { en: plateHref('en', c, p), zh: plateHref('zh', c, p) },
+}));
+const d = fallback;
+const dSizes = `(max-width: 699px) calc(100vw - 40px), min(76vw, calc(68vh * ${d.photo.ratio.toFixed(3)}))`;
+
+// Small versions of every photograph, for skimming through a collection from the index.
+const previews = Object.fromEntries(
+  collections.map((c) => [c.slug, c.photos.map((p) => ({ h: p.hash, r: p.ratio, ws: p.widths.filter((w) => w <= 1200) }))]),
+);
+const total = collections.reduce((n, c) => n + c.photos.length, 0);
+---
+
+<Base
+  lang={lang}
+  page="home"
+  title={{ en: 'Jia — Photographs', zh: 'Jia — 照片' }}
+  path={{ en: home('en'), zh: home('zh') }}
+  image={jpeg(d.photo, 1200)}
+  data={{ previews }}
+>
+  <section class="cover" aria-label="Cover">
+    <figure data-cover class="js-only">
+      <a class="ph reveal" data-cover-link>
+        <picture>
+          <source type="image/avif" />
+          <img alt="" fetchpriority="high" decoding="async" onload="this.classList.add('is-loaded')" />
+        </picture>
+      </a>
+      <figcaption class="small">
+        <span class="word"></span>
+        <span class="time"></span>
+      </figcaption>
+    </figure>
+    <script is:inline type="application/json" id="covers" set:html={JSON.stringify(covers).replace(/</g, '\\u003c')} />
+    <script is:inline>
+      (function () {
+        var list = JSON.parse(document.getElementById('covers').textContent);
+        if (!list.length) return;
+        var now = new Date();
+        var m = now.getHours() * 60 + now.getMinutes();
+        var dist = list.map(function (c) {
+          if (c.min == null) return 1e9;
+          var x = Math.abs(c.min - m);
+          return Math.min(x, 1440 - x);
+        });
+        var best = Math.min.apply(null, dist);
+        // Photographs within a quarter of an hour of the closest one take turns.
+        var near = list.filter(function (_, i) { return dist[i] <= best + 15; });
+        var c = near[Math.floor(Math.random() * near.length)];
+        var lang = document.documentElement.dataset.lang;
+        var fig = document.querySelector('[data-cover]');
+        var a = fig.querySelector('a');
+        var img = fig.querySelector('img');
+        var sizes = '(max-width: 699px) calc(100vw - 40px), min(76vw, calc(68vh * ' + c.r.toFixed(3) + '))';
+        a.style.cssText = '--r:' + c.r + ';--c:' + c.color + ';background-image:url(' + c.lqip + ')';
+        a.href = c.href[lang];
+        a.dataset.hrefEn = c.href.en;
+        a.dataset.hrefZh = c.href.zh;
+        fig.querySelector('source').setAttribute('sizes', sizes);
+        fig.querySelector('source').setAttribute('srcset', c.avif);
+        img.setAttribute('sizes', sizes);
+        img.setAttribute('srcset', c.jpg);
+        img.width = c.w;
+        img.height = c.h;
+        img.src = c.src;
+        img.alt = c.alt[lang];
+        img.dataset.altEn = c.alt.en;
+        img.dataset.altZh = c.alt.zh;
+        var word = fig.querySelector('.word');
+        word.innerHTML = '<span data-l="en" lang="en"></span><span data-l="zh" lang="zh-Hans"></span>';
+        word.children[0].textContent = c.word.en;
+        word.children[1].textContent = c.word.zh;
+        fig.querySelector('.time').textContent = c.time;
+      })();
+    </script>
+    <noscript>
+      <figure>
+        <a class="ph" href={plateHref(lang, d.collection, d.photo)} style={`--r:${d.photo.ratio};--c:${d.photo.color}`}>
+          <picture>
+            <source type="image/avif" srcset={srcset(d.photo, 'avif')} sizes={dSizes} />
+            <img src={jpeg(d.photo, 1200)} srcset={srcset(d.photo, 'jpg')} sizes={dSizes} width={d.photo.w} height={d.photo.h} alt={altText(d.collection, d.photo)[lang]} />
+          </picture>
+        </a>
+        <figcaption class="small">
+          <span class="word"><T t={d.collection.word} /></span>
+          <span class="time">{time(d.photo.taken)}</span>
+        </figcaption>
+      </figure>
+    </noscript>
+  </section>
+
+  <section class="index" aria-labelledby="index-title">
+    <div class="index-head small">
+      <h2 id="index-title" class="small"><T t={ui.index} /></h2>
+      <span><T t={count(total)} /></span>
+    </div>
+    <ol>
+      {
+        collections.map((c) => (
+          <li data-slug={c.slug}>
+            <a href={collectionHref(lang, c)} data-href-en={collectionHref('en', c)} data-href-zh={collectionHref('zh', c)} data-slug={c.slug}>
+              <span class="num">{pad(c.number)}</span>
+              <span class="w" data-l="en" lang="en">{c.word.en}</span>
+              <span class="w" data-l="zh" lang="zh-Hans">{c.word.zh}</span>
+              <span class="z" data-l="en" lang="zh-Hans">{c.word.zh}</span>
+              <span class="z" data-l="zh" lang="en">{c.word.en}</span>
+              <span class="k small muted">
+                <T t={photoCount(c)} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="index-preview" aria-hidden="true">
+      <div class="frame">
+        <picture>
+          <source type="image/avif" />
+          <img alt="" decoding="async" />
+        </picture>
+      </div>
+      <div class="count small"></div>
+    </div>
+  </section>
+</Base>

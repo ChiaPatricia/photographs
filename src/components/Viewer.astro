@@ -1,0 +1,26 @@
+---
+// The quiet full-screen view of one photograph. Filled in and driven by scripts/viewer.ts.
+import T from './T.astro';
+import { ui } from '../lib/i18n';
+---
+
+<dialog class="viewer small" aria-label="Photograph" data-viewer>
+  <div class="viewer-bg"></div>
+  <div class="viewer-frame">
+    <img class="lo" alt="" aria-hidden="true" decoding="sync" />
+    <picture>
+      <source type="image/avif" />
+      <img class="hi" alt="" />
+    </picture>
+  </div>
+  <button class="viewer-hit prev" type="button"><span class="visually-hidden"><T t={ui.previous} /></span></button>
+  <button class="viewer-hit next" type="button"><span class="visually-hidden"><T t={ui.following} /></span></button>
+  <button class="viewer-close" type="button"><T t={ui.close} /></button>
+  <div class="viewer-info" aria-live="polite">
+    <span class="n"></span>
+    <span class="line"></span>
+    <button class="more" type="button" aria-expanded="false"><T t={ui.details} /></button>
+    <span class="tech"></span>
+    <span class="note"></span>
+  </div>
+</dialog>

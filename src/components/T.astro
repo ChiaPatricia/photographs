@@ -1,0 +1,24 @@
+---
+// Text in both languages; the page shows the active one and the language switch
+// swaps them in place. Identical strings are written once.
+import type { Text } from '../lib/i18n';
+
+interface Props {
+  t: Text | null | undefined;
+  class?: string;
+}
+
+const { t, class: className } = Astro.props;
+---
+
+{
+  t &&
+    (t.en === t.zh ? (
+      <span class={className}>{t.en}</span>
+    ) : (
+      <>
+        <span class={className} data-l="en" lang="en">{t.en}</span>
+        <span class={className} data-l="zh" lang="zh-Hans">{t.zh}</span>
+      </>
+    ))
+}

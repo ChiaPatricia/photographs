@@ -1,0 +1,86 @@
+---
+// A single photograph at its own address. Works as a plain page without JavaScript;
+// with it, the same viewer as on the collection page takes over.
+import Base from '../layouts/Base.astro';
+import T from './T.astro';
+import Photo from './Photo.astro';
+import Viewer from './Viewer.astro';
+import {
+  altText,
+  collectionHref,
+  jpeg,
+  line,
+  plateHref,
+  plateLabel,
+  technical,
+  type Collection,
+  type Photo as P,
+} from '../lib/archive';
+import { ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  collection: Collection;
+  photo: P;
+}
+
+const { lang, collection: c, photo: p } = Astro.props;
+const i = c.photos.indexOf(p);
+const prev = c.photos[(i - 1 + c.photos.length) % c.photos.length];
+const next = c.photos[(i + 1) % c.photos.length];
+const plate = (x: P) => ({ en: plateHref('en', c, x), zh: plateHref('zh', c, x) });
+const back = { en: `${collectionHref('en', c)}#${p.id}`, zh: `${collectionHref('zh', c)}#${p.id}` };
+const alt = altText(c, p);
+const desc = p.note ?? alt;
+const sizes = `(max-width: 699px) 100vw, min(92vw, calc(76vh * ${p.ratio.toFixed(3)}))`;
+
+const data = {
+  current: i,
+  collection: { slug: c.slug, number: c.number, href: { en: collectionHref('en', c), zh: collectionHref('zh', c) } },
+  photos: c.photos.map((x) => ({
+    id: x.id,
+    hash: x.hash,
+    w: x.w,
+    h: x.h,
+    r: x.ratio,
+    widths: x.widths,
+    color: x.color,
+    lqip: x.lqip,
+    alt: altText(c, x),
+    line: line(x),
+    tech: technical(x),
+    note: x.note,
+    n: plateLabel(c, x),
+    href: plate(x),
+  })),
+};
+---
+
+<Base
+  lang={lang}
+  page="plate"
+  title={{ en: `${c.word.en}, ${i + 1} — Jia`, zh: `${c.word.zh}，第 ${i + 1} 张 — Jia` }}
+  description={desc}
+  path={plate(p)}
+  tint={c.tint}
+  image={jpeg(p, 1200)}
+  data={data}
+  current={c.slug}
+>
+  <div class="plate-page">
+    <figure>
+      <Photo photo={p} collection={c} lang={lang} sizes={sizes} eager priority reveal={false} />
+    </figure>
+    <div class="bar small">
+      <span><span class="n">{plateLabel(c, p)}</span> · <T t={line(p)} /></span>
+      <nav aria-label="Photographs">
+        <a href={plate(prev)[lang]} data-href-en={plate(prev).en} data-href-zh={plate(prev).zh} rel="prev"><T t={ui.previous} /></a>
+        <a href={back[lang]} data-href-en={back.en} data-href-zh={back.zh}><T t={c.word} /></a>
+        <a href={plate(next)[lang]} data-href-en={plate(next).en} data-href-zh={plate(next).zh} rel="next"><T t={ui.following} /></a>
+      </nav>
+      <span class="muted">{technical(p)}</span>
+      {p.note && <span><T t={p.note} /></span>}
+    </div>
+  </div>
+  <Viewer slot="after" />
+</Base>
