@@ -103,9 +103,12 @@ Sequenced from green to red, ending on a single leaf held up in a hand.
 
 Opens on the red, so the sentence about the red follows it; ends looking straight up.
 
-> This red comes from oxygen that takes about two minutes to glow; only very high up, where the air is thin, can it wait that long.
+> Oxygen glows red only if nothing bumps into it for about two minutes. That happens only very high up, where the air is thin, so the red is at the top.
 >
-> 这种红光来自氧原子，它要等大约两分钟才发光；只有在很高、空气很稀薄的地方，它才等得起。
+> 氧要连续两分钟左右不被撞到，才会发红光。只有在很高的地方，空气才稀薄到这个程度，所以红色在最上面。
+
+(Rewritten in plain words after Jia found the first version — "only very high up, where the air is
+thin, can it wait that long" — confusing.)
 
 - The red is the 630 nm line of atomic oxygen, O(¹D). Its radiative lifetime is about 110 s; lower
   down, collisions take the energy away before it can be emitted, so red aurora comes from roughly
@@ -128,8 +131,8 @@ Opens on the red, so the sentence about the red follows it; ends looking straigh
 | `_MG_3068` | Northern mockingbird. A male may learn around two hundred songs. |
 | `_MG_2962` | Eastern grey squirrel. |
 | `_MG_2968` | The lighthouse was first lit in 1883. |
-| `IMG_6884` | It began two days earlier, at almost the same time of night, with an eruption on the sun. |
-| `IMG_6876` | The green is oxygen too, lower down, about a hundred kilometres up, and it glows within about a second. |
+| `IMG_6884` | The eruption on the sun that caused this happened two days earlier, at almost the same time of night. |
+| `IMG_6876` | The green is oxygen too, but it needs only about a second, so it can glow lower down, about a hundred kilometres up. |
 
 ## Verified stories not used (for later collections)
 

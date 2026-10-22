@@ -213,8 +213,8 @@
     en: Slow
     zh: 慢
   sentence:
-    en: This red comes from oxygen that takes about two minutes to glow; only very high up, where the air is thin, can it wait that long.
-    zh: 这种红光来自氧原子，它要等大约两分钟才发光；只有在很高、空气很稀薄的地方，它才等得起。
+    en: Oxygen glows red only if nothing bumps into it for about two minutes. That happens only very high up, where the air is thin, so the red is at the top.
+    zh: 氧要连续两分钟左右不被撞到，才会发红光。只有在很高的地方，空气才稀薄到这个程度，所以红色在最上面。
   place:
     en: Maine
     zh: 缅因州
@@ -226,10 +226,10 @@
   photos:
     IMG_6884.JPG:
       alt: { en: "Red and green aurora over pine trees, a power pole and its wires in silhouette.", zh: "松树上空红绿相间的极光，电线杆和电线成了剪影。" }
-      note: { en: "It began two days earlier, at almost the same time of night, with an eruption on the sun.", zh: "两天前差不多同一时刻，太阳上发生了一次爆发，这场极光就是它引起的。" }
+      note: { en: "The eruption on the sun that caused this happened two days earlier, at almost the same time of night.", zh: "引起这场极光的太阳爆发，发生在两天前差不多同一时刻。" }
     IMG_6876.JPG:
       alt: { en: "Curtains of green and red aurora above a dark horizon with a few distant lights.", zh: "漆黑的地平线上方，绿色和红色的极光像帘子一样垂下，远处有几点灯光。" }
-      note: { en: "The green is oxygen too, lower down, about a hundred kilometres up, and it glows within about a second.", zh: "绿光也来自氧原子，位置低一些，大约一百公里高，一秒左右就发出来。" }
+      note: { en: "The green is oxygen too, but it needs only about a second, so it can glow lower down, about a hundred kilometres up.", zh: "绿光也来自氧，但只要一秒左右不被撞到就行，所以低一些也能发光，大约在一百公里高。" }
     IMG_6896.JPG:
       alt: { en: "A person seen from behind, in silhouette, watching a green aurora; pines on the right.", zh: "一个人的背影，望着绿色的极光，右边是松树。" }
     IMG_6898.JPG:

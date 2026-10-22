@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { t } = Astro.props;
-const clauses = t.zh.split(/(?<=[，；：、])|(?<=——)/u).filter(Boolean);
+const clauses = t.zh.split(/(?<=[，；：、。])|(?<=——)/u).filter(Boolean);
 ---
 
 <span data-l="en" lang="en">{t.en}</span>
