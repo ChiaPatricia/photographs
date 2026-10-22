@@ -26,7 +26,8 @@ const base = site.url ? site.url.replace(/\/$/, '') : '';
 const abs = (p: string) => (base ? `${base}${p}` : p);
 const desc = description ?? site.description;
 
-// A collection's page takes the faintest tint of its own photographs.
+// A collection's page takes the faintest tint of its own photographs. Set on <html>, where
+// --paper is worked out; on <body> it would come too late to change it.
 const tintStyle = tint ? `--paper-h:${tint.h};--paper-c:${Math.min(0.011, 0.0028 + tint.c * 0.12).toFixed(4)}` : undefined;
 
 // Every photograph, for "Elsewhere". Without JavaScript the link goes to one chosen at build time.
@@ -50,6 +51,7 @@ const json = JSON.stringify({ page, lang, ...data, all }).replace(/</g, '\\u003c
   data-title-zh={title.zh}
   data-desc-en={desc?.en}
   data-desc-zh={desc?.zh}
+  style={tintStyle}
 >
   <head>
     <meta charset="utf-8" />
@@ -99,7 +101,7 @@ const json = JSON.stringify({ page, lang, ...data, all }).replace(/</g, '\\u003c
       })();
     </script>
   </head>
-  <body style={tintStyle} data-collection={current} data-color={color}>
+  <body data-collection={current} data-color={color}>
     <Header lang={lang} path={path} page={page} wander={wander} />
     <main id="main" tabindex="-1">
       <slot />
