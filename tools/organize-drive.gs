@@ -102,6 +102,17 @@ const PLAN = {
     "_MG_2882.jpg",
     "_MG_2883.JPG",
     "_MG_2884.JPG"
+  ],
+  "05-aurora": [
+    "IMG_6876.JPG",
+    "IMG_6884.JPG",
+    "IMG_6896.JPG",
+    "IMG_6898.JPG"
+  ],
+  "05-aurora/_hold": [
+    "IMG_6885.JPG",
+    "IMG_6886.JPG",
+    "IMG_6900.JPG"
   ]
 };
 

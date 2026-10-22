@@ -658,3 +658,34 @@ a .print:hover,
     animation: none;
   }
 }
+
+/* ------------------------------------------------------------------ slow */
+
+/* The aurora collection: after about two minutes on the page the top of the screen turns
+   faintly red, the way the sky does only where oxygen has time to glow (slow.ts). The glow
+   sits between the paper and the photographs. */
+.is-slow {
+  isolation: isolate;
+}
+
+.is-slow::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  height: 72vh;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 0%, oklch(60% 0.21 22 / 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 24s linear;
+}
+
+.is-slow.is-red::before {
+  opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .is-slow::before {
+    background: radial-gradient(120% 100% at 50% 0%, oklch(52% 0.2 22 / 0.3), transparent 70%);
+  }
+}

@@ -17,6 +17,7 @@ Drive folder/
   02-animals/     → Cache 藏
   03-light/       → Glitter 波光
   04-places/      → Still 还在
+  05-aurora/      → Slow 慢
     _hold/        → 以 _ 开头的文件夹不会出现在网站上（备选、重复的照片放这里）
   照片.jpg         → 顶层的照片是“收件箱”：不显示，除非 collections.yaml 里点名
 ```
@@ -24,7 +25,8 @@ Drive folder/
 不在 Drive 里的照片（比如从 luckyjiaxu.com 拿来的几张）放在仓库的 `extra/<文件夹名>/` 里，
 和 Drive 里同名文件夹的照片合在一起。
 
-现在 Drive 里的 75 张照片还都在顶层，网站按 `content/collections.yaml` 里列出的文件名取用其中 28 张。
+现在 Drive 里的 82 张照片还都在顶层，网站按 `content/collections.yaml` 里列出的文件名取用其中 34 张
+（另外 4 张在 `extra/`）。
 想在 Drive 里也按文件夹整理好：打开 `tools/organize-drive.gs`，按文件开头的四步在 script.google.com
 运行一次（只移动文件，不复制、不删除，分享链接不变）。
 
@@ -48,6 +50,8 @@ Drive folder/
 | 名字、封面候选、关于页、联系方式 | `content/site.yaml` |
 | 界面上的词（目录、关于、别处……） | `src/lib/i18n.ts` |
 
+`{ … }` 里的文字要放在双引号里，不然遇到英文逗号就会被截断。
+
 所有词和句子现在都是 `status: draft`（暂定），确认后改成 `final`。依据和备选见 [CURATION.md](CURATION.md)。
 
 ## 藏起来的细节 · Things that are found, not announced
@@ -57,6 +61,7 @@ Drive folder/
 - 在大图里停留约 7 秒，有些照片会多出一行字。
 - 「别处」会带你去一张还没看过的照片（只记在访客自己的浏览器里）。
 - 在「藏」这一组，鼠标冲得太快，照片会轻轻躲开；慢慢靠近就不会。
+- 在「慢」这一组的页面上停留大约两分钟，屏幕顶上会慢慢泛起一点红色（那种红光本身也要等这么久才发出来）。
 - 键盘：← → 切换，`i` 详情，`e` 别处，`Esc` 关闭。手机：左右滑切换，下拉关闭，长按看详情。
 
 ## 本地预览 · Working locally

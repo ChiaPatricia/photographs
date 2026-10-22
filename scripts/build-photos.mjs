@@ -186,8 +186,7 @@ async function processPhoto(file, buf, hash) {
   const rotated = (meta.orientation ?? 1) >= 5;
   const W = rotated ? meta.height : meta.width;
   const H = rotated ? meta.width : meta.height;
-  const widths = WIDTHS.filter((w) => w < W);
-  widths.push(Math.min(W, WIDTHS.at(-1)));
+  const widths = [...new Set([...WIDTHS.filter((w) => w < W), Math.min(W, WIDTHS.at(-1))])];
 
   await mkdir(dir, { recursive: true });
   const base = sharp(input, { failOn: 'none' }).rotate();
@@ -334,7 +333,7 @@ for (const [folder, photos] of byFolder) {
       w: m.w,
       h: m.h,
       ratio: +(m.w / m.h).toFixed(4),
-      widths: m.widths,
+      widths: [...new Set(m.widths)], // older cache entries listed the largest width twice
       space: m.space,
       lqip: m.lqip,
       color: m.color.hex,

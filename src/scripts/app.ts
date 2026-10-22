@@ -6,6 +6,7 @@ import { initWander } from './wander';
 import { initIndex } from './index-preview';
 import { initViewer } from './viewer';
 import { initShy } from './shy';
+import { initSlow } from './slow';
 import { watchSeen } from './seen';
 import { initPile } from './pile';
 import { initCursor } from './cursor';
@@ -24,4 +25,5 @@ if (data.page === 'collection' || data.page === 'plate') initViewer();
 if (data.page === 'collection') {
   watchSeen();
   initShy();
+  initSlow();
 }

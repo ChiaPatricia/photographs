@@ -14,10 +14,13 @@ Point until after sunset, and the Great Jack O'Lantern Blaze at night.
   so all times are corrected by −12 h in `content/site.yaml`.
 - Olympus μ1020 (night photographs, 1280 px). Now all held back.
 
+Added later: seven iPhone 13 Pro photographs of the **aurora over southern Maine**, 10 October 2024,
+22:01–22:14 EDT (Display P3; the phone's clock is right, and its GPS is never published).
+
 What runs through almost every frame: **light from behind** — leaves lit through, sun on the
 water, people in silhouette — and orange against blue.
 
-## Selection — 30 of 75, plus 4 from luckyjiaxu.com
+## Selection — 34 of 82, plus 4 from luckyjiaxu.com
 
 - One frame per scene. Bursts were compared side by side and by measured sharpness; the sharpest
   frame with the best gesture or composition stays (the squirrel `_MG_2962` over `_MG_2961`, the
@@ -31,11 +34,13 @@ water, people in silhouette — and orange against blue.
   read 04:47–04:51, but the light is mid-afternoon, so the camera clock is taken to be on Beijing
   time, 13 hours ahead of New England in winter — corrected in `collections.yaml`), the Gothic window
   `p3`, and the beach in late sun `p11` (San Francisco, 13 November 2024).
+- The aurora: 4 of 7. Held back: `IMG_6885` (the power pole twelve seconds after `IMG_6884`, without
+  the bright ray), `IMG_6886` and `IMG_6900` (the same horizon as `IMG_6876`, which has the strongest colour).
 - Taken out at Jia's request: the Sleepy Hollow Halloween photographs — the village sign
   (`_MG_2882`), the skeleton horse (`_MG_2883`), the clock with pumpkins (`_MG_2884`) and the
   jack-o'-lanterns (`PA180122`, `PA180139`).
 
-## Four collections
+## Five collections
 
 The logic of the names: one plain word in each language, not translations of each other, and one
 sentence that tells something the photographs cannot show.
@@ -94,6 +99,27 @@ Sequenced from green to red, ending on a single leaf held up in a hand.
   photographs — opened beside it. The lighthouse was restored in 2024.
 - Avoid: an exact retirement year (sources say 1961 or 1965) and "68 years of service" (wrong).
 
+### 05 · Slow · 慢 — the aurora over southern Maine (4)
+
+Opens on the red, so the sentence about the red follows it; ends looking straight up.
+
+> This red comes from oxygen that takes about two minutes to glow; only very high up, where the air is thin, can it wait that long.
+>
+> 这种红光来自氧原子，它要等大约两分钟才发光；只有在很高、空气很稀薄的地方，它才等得起。
+
+- The red is the 630 nm line of atomic oxygen, O(¹D). Its radiative lifetime is about 110 s; lower
+  down, collisions take the energy away before it can be emitted, so red aurora comes from roughly
+  150–250 km and up, and the green (lifetime about a second) from 100–150 km. Atmospheric Optics,
+  "Glowing Gases – Aurorae" (atoptics.co.uk/highsky/auror3.htm); Solomon, Hays & Abreu 1988,
+  "The auroral 6300 Å emission: Observations and modeling", *J Geophys Res* 93(A9):9867,
+  doi:10.1029/JA093iA09p09867; DLR, "Green auroras" (100–120 km).
+- The storm: an X1.8 flare peaked at 9:56 p.m. EDT on 8 October 2024 (NASA SVS 14703); its CME
+  arrived at 11:15 a.m. EDT on 10 October and the storm reached G4, "severe", at 12:57 p.m.
+  (NOAA SWPC, reported by *Astronomy*). These photographs are from 22:01–22:14 on 10 October —
+  two days after the flare, at almost the same time of night.
+- Avoid: an exact altitude for where the red starts (sources say 150–200 km), and saying the light
+  "came from the sun" — the sun's eruption set it off; the light itself is our own air.
+
 ## Notes that appear after about seven seconds
 
 | Photograph | Note |
@@ -102,6 +128,8 @@ Sequenced from green to red, ending on a single leaf held up in a hand.
 | `_MG_3068` | Northern mockingbird. A male may learn around two hundred songs. |
 | `_MG_2962` | Eastern grey squirrel. |
 | `_MG_2968` | The lighthouse was first lit in 1883. |
+| `IMG_6884` | It began two days earlier, at almost the same time of night, with an eruption on the sun. |
+| `IMG_6876` | The green is oxygen too, lower down, about a hundred kilometres up, and it glows within about a second. |
 
 ## Verified stories not used (for later collections)
 
@@ -141,4 +169,6 @@ Each was checked against primary or authoritative sources; corrections noted.
 - Places: the interiors look like **Lyndhurst** (Tarrytown) and the river photographs like
   **Kingsland Point Park**; the site says only "Tarrytown" and "Sleepy Hollow" until confirmed.
 - Is the hand holding the maple leaf yours? It is the About page's photograph.
+- Who is the figure watching the aurora in `IMG_6896`, and are they happy to be on the site? Is
+  "Maine" (no town) the right amount of place?
 - The words and sentences (all `draft`), and whether to add a Chinese name, contact or a line on the About page.
