@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/play.css';
 import serifFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
 import sansFont from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
@@ -17,9 +18,10 @@ interface Props {
   image?: string;
   data?: Record<string, unknown>;
   current?: string; // collection slug, if any
+  color?: string; // one of luckyjiaxu.com's colours
 }
 
-const { lang, page, title, description, path, tint, image, data = {}, current } = Astro.props;
+const { lang, page, title, description, path, tint, image, data = {}, current, color = 'tomato' } = Astro.props;
 const base = site.url ? site.url.replace(/\/$/, '') : '';
 const abs = (p: string) => (base ? `${base}${p}` : p);
 const desc = description ?? site.description;
@@ -97,7 +99,7 @@ const json = JSON.stringify({ page, lang, ...data, all }).replace(/</g, '\\u003c
       })();
     </script>
   </head>
-  <body style={tintStyle} data-collection={current}>
+  <body style={tintStyle} data-collection={current} data-color={color}>
     <Header lang={lang} path={path} page={page} wander={wander} />
     <main id="main" tabindex="-1">
       <slot />

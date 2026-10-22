@@ -1,0 +1,660 @@
+/* The playful layer: the colours of luckyjiaxu.com, prints with an old digital camera's date
+   stamp, pills, stickers and a pile of photographs to push around. Layout and type live in
+   global.css; this file only adds personality on top. */
+
+@font-face {
+  font-family: 'Jia Stamp';
+  src: url('../assets/fonts/DSEG7Classic-BoldItalic.woff2') format('woff2');
+  font-display: swap;
+}
+
+[data-color='tomato'] {
+  --accent: var(--tomato);
+  --accent-soft: var(--tomato-soft);
+}
+[data-color='orange'] {
+  --accent: var(--orange);
+  --accent-soft: var(--orange-soft);
+}
+[data-color='yellow'] {
+  --accent: var(--yellow);
+  --accent-soft: var(--yellow-soft);
+}
+[data-color='green'] {
+  --accent: var(--green);
+  --accent-soft: var(--green-soft);
+}
+[data-color='blue'] {
+  --accent: var(--blue);
+  --accent-soft: var(--blue-soft);
+}
+
+/* Paper with a little grain, like a print's back. */
+body {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+::selection {
+  background: color-mix(in oklch, var(--accent) 32%, transparent);
+}
+
+/* ------------------------------------------------------------------ pills */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42em;
+  padding: 0.5em 0.95em 0.48em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--paper) 55%, transparent);
+  font-family: var(--sans);
+  font-size: var(--small);
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  transition:
+    background-color 200ms,
+    color 200ms,
+    border-color 200ms,
+    translate 250ms var(--ease-out);
+}
+
+.pill:lang(zh),
+.pill :lang(zh) {
+  font-family: var(--sans-zh);
+}
+
+a.pill:hover,
+button.pill:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.pill.soft {
+  border-color: transparent;
+  background: var(--accent-soft);
+}
+
+.e {
+  font-style: normal;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+
+/* Header: the same pills as luckyjiaxu.com. */
+.nav {
+  gap: 0.45rem;
+}
+
+.nav > a,
+.nav > .lang {
+  padding: 0.5em 0.95em 0.48em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--paper) 55%, transparent);
+  color: var(--ink);
+  line-height: 1;
+}
+
+.nav > a:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.nav > a[aria-current='page'] {
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+
+.nav .lang a {
+  color: var(--ink-3);
+}
+
+.site-header .mark {
+  font-size: 1.6rem;
+}
+
+/* ------------------------------------------------------------------ prints */
+
+.print {
+  --bw: clamp(6px, 0.62vw, 10px);
+  position: relative;
+  display: block;
+  width: max-content;
+  padding: var(--bw);
+  background: var(--print);
+  box-shadow: var(--shadow-print);
+  rotate: var(--rot, 0deg);
+  transition:
+    rotate 500ms var(--ease-out),
+    scale 400ms var(--ease-out),
+    box-shadow 400ms var(--ease-out);
+}
+
+.print .ph {
+  background-color: var(--c);
+}
+
+/* The date an old digital camera burns into the corner of the picture. */
+.stamp {
+  position: absolute;
+  right: calc(var(--bw, 0px) + 4.5%);
+  bottom: calc(var(--bw, 0px) + 5%);
+  z-index: 2;
+  font: 400 clamp(8px, 0.7vw, 12px) / 1 'Jia Stamp', ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  color: var(--stamp);
+  text-shadow:
+    0 0 1px rgb(255 190 120 / 0.9),
+    0 0 4px rgb(255 110 0 / 0.75);
+  opacity: 0.95;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+a .print:hover,
+.print:is(a):hover {
+  rotate: calc(var(--rot, 0deg) * 0.3);
+  scale: 1.015;
+}
+
+/* ------------------------------------------------------------------ home: a pile of prints */
+
+.dump {
+  position: relative;
+  min-height: calc(100 * var(--vh));
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: calc(var(--top) * 2 + 1.6rem) var(--m) calc(var(--top) + 0.6rem);
+  overflow: clip;
+}
+
+.dump-name {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font: italic 300 clamp(10rem, 37vw, 38rem) / 0.8 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.045em;
+  color: var(--accent);
+  pointer-events: none;
+  user-select: none;
+  translate: -2vw -7vh;
+}
+
+.pile {
+  position: relative;
+  min-height: calc(74 * var(--vh));
+}
+
+.pile .print {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  z-index: var(--z, 1);
+  translate: -50% -50%;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-user-drag: none;
+  user-select: none;
+  animation: drop 760ms cubic-bezier(0.2, 1.25, 0.35, 1) backwards;
+  animation-delay: calc(120ms + var(--i, 0) * 75ms);
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    translate: -50% calc(-50% - 7vh);
+    rotate: calc(var(--rot) - 14deg);
+    scale: 1.08;
+  }
+}
+
+.pile .print img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.pile .print .cap {
+  display: none;
+  position: absolute;
+  left: var(--bw);
+  top: calc(100% + 0.7rem);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.pile .print.is-top .cap {
+  display: block;
+}
+
+.pile .print.is-gone {
+  transition:
+    translate 420ms cubic-bezier(0.4, 0, 1, 1),
+    rotate 420ms cubic-bezier(0.4, 0, 1, 1),
+    opacity 420ms;
+  opacity: 0;
+}
+
+@media (hover: none) {
+  .hint-drag {
+    display: none;
+  }
+}
+
+@media (hover: hover) {
+  .hint-swipe {
+    display: none;
+  }
+}
+
+.pile .print .ph {
+  width: calc(var(--pw) * 1vw);
+}
+
+.pile .print.is-dragging {
+  cursor: grabbing;
+  scale: 1.04;
+  box-shadow:
+    0 2px 4px rgb(22 24 29 / 0.1),
+    0 28px 60px -10px rgb(22 24 29 / 0.38);
+  transition: scale 200ms var(--ease-out);
+}
+
+
+.dump-meta {
+  position: relative;
+  z-index: 300;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  padding-top: 1.2rem;
+}
+
+/* ------------------------------------------------------------------ marquee of collection names */
+
+.marquee {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding-block: clamp(0.8rem, 1.6vw, 1.3rem);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee .track {
+  display: flex;
+  width: max-content;
+  animation: marquee 46s linear infinite;
+}
+
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
+.marquee .item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  padding-right: 1.6em;
+  font: italic 300 clamp(1.6rem, 3.2vw, 3rem) / 1.05 var(--serif);
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+.marquee .item .z {
+  font: 300 0.5em/1 var(--serif-zh);
+  color: var(--ink-2);
+}
+
+.marquee .item .star {
+  font-style: normal;
+  font-size: 0.5em;
+  color: var(--ink-3);
+  padding-left: 0.6em;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ------------------------------------------------------------------ index */
+
+.index li a:hover .w,
+.index li a:focus-visible .w {
+  color: var(--accent);
+}
+
+.index li .sticker {
+  display: inline-block;
+  margin-left: 0.22em;
+  font-size: 0.42em;
+  vertical-align: 0.55em;
+  rotate: -10deg;
+  transition: rotate 500ms var(--ease-out);
+}
+
+.index li a:hover .sticker {
+  rotate: 12deg;
+}
+
+.index li .k {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45em 0.85em 0.43em;
+}
+
+.index-preview .frame {
+  padding: 9px;
+  background: var(--print);
+  box-shadow: var(--shadow-print);
+  rotate: var(--rot, -2deg);
+  transition: rotate 400ms var(--ease-out);
+}
+
+.index-preview .frame {
+  position: relative;
+}
+
+.index-preview .stamp {
+  --bw: 9px;
+}
+
+/* ------------------------------------------------------------------ collection pages */
+
+.opening .sticker {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: 0.1em;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  font-size: 0.4em;
+  rotate: -12deg;
+  align-self: center;
+}
+
+.opening h1 .w:lang(en) {
+  color: var(--ink);
+}
+
+.opening .num {
+  color: var(--accent);
+}
+
+.opening .meta {
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.opening .meta > span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.5em 0.9em 0.48em;
+  line-height: 1;
+}
+
+.opening .meta .draft {
+  border-style: dashed;
+}
+
+/* The sentence, as a fun fact card. */
+.fact {
+  max-width: 34ch;
+  padding: 1.25em 1.45em 1.4em;
+  border-radius: 22px;
+  background: var(--accent-soft);
+  rotate: -1.2deg;
+}
+
+.fact .label {
+  display: inline-flex;
+  gap: 0.4em;
+  margin-bottom: 0.85em;
+  padding: 0.45em 0.8em 0.43em;
+  border-radius: 999px;
+  background: var(--paper);
+  font: 600 var(--small) / 1 var(--sans);
+  color: var(--accent);
+  letter-spacing: 0.01em;
+}
+
+.fact .label:lang(zh) {
+  font-family: var(--sans-zh);
+}
+
+.fact p {
+  max-width: none;
+}
+
+.sentence .fact p:lang(zh) {
+  max-width: 24em;
+}
+
+/* Small photographs in a sequence become prints, tilted a little. */
+.spread .print {
+  align-self: flex-start;
+}
+
+.size-small .print .ph,
+.pair-offset .print .ph {
+  background-image: none;
+}
+
+/* Camera roll at the end of a collection. */
+.roll {
+  margin-top: clamp(120px, calc(24 * var(--vh)), 300px);
+  padding: 0 var(--m);
+  display: grid;
+  gap: 1.1rem;
+}
+
+.roll-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.roll ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(88px, 11vw, 150px), 1fr));
+  gap: 4px;
+}
+
+.roll li a {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--c, var(--veil));
+}
+
+.roll li img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 500ms var(--ease-out);
+}
+
+.roll li a:hover img {
+  scale: 1.06;
+}
+
+.roll .stamp {
+  --bw: 0px;
+  font-size: 8px;
+}
+
+.roll li.is-seen a::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--print);
+}
+
+.next a.to:hover .w {
+  color: var(--accent);
+}
+
+.next .sticker {
+  font-size: 0.5em;
+  margin-left: 0.25em;
+  vertical-align: 0.4em;
+  display: inline-block;
+  rotate: -8deg;
+}
+
+/* ------------------------------------------------------------------ viewer */
+
+.viewer-frame .stamp {
+  --bw: 0px;
+  font-size: clamp(10px, 1vw, 15px);
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out);
+}
+
+.viewer.is-settled .viewer-frame .stamp {
+  opacity: 0.95;
+}
+
+/* ------------------------------------------------------------------ cursor label */
+
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 300;
+  padding: 0.5em 0.85em 0.48em;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 var(--small) / 1 var(--sans);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity 180ms,
+    scale 260ms var(--ease-out);
+}
+
+.cursor:lang(zh) {
+  font-family: var(--sans-zh);
+}
+
+.cursor.is-on {
+  opacity: 1;
+  scale: 1;
+}
+
+@media (hover: none) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ about */
+
+.page .print {
+  grid-column: 2 / span 4;
+  justify-self: center;
+  align-self: start;
+}
+
+.page .print .ph {
+  width: min(30vw, 420px);
+}
+
+.page h1 {
+  color: var(--accent);
+}
+
+.page .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+/* ------------------------------------------------------------------ small screens */
+
+@media (max-width: 699px) {
+  .dump {
+    padding-top: calc(var(--top) * 2 + 1.2rem);
+  }
+
+  .dump-name {
+    font-size: 52vw;
+    place-items: start center;
+    padding-top: calc(var(--top) * 2 + 3.4rem);
+    translate: -1vw 0;
+  }
+
+  .pile {
+    min-height: calc(66 * var(--vh));
+  }
+
+  .pile .print {
+    left: 50%;
+    top: 47%;
+    rotate: var(--rotm);
+  }
+
+  @keyframes drop {
+    from {
+      opacity: 0;
+      translate: -50% calc(-50% - 5vh);
+      rotate: calc(var(--rotm) - 10deg);
+    }
+  }
+
+  .pile .print .ph {
+    width: calc(var(--pm) * 1vw);
+    max-height: calc(58 * var(--vh));
+    width: min(calc(var(--pm) * 1vw), calc(58 * var(--vh) * var(--r)));
+  }
+
+  .nav > a,
+  .nav > .lang {
+    padding: 0.45em 0.75em 0.43em;
+  }
+
+  .page .print {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .page .print .ph {
+    width: 64vw;
+  }
+
+  .fact {
+    rotate: -0.8deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee .track,
+  .pile .print {
+    animation: none;
+  }
+}

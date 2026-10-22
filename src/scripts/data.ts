@@ -15,6 +15,7 @@ export interface ViewPhoto {
   tech: string;
   note: Text | null;
   n: string;
+  stamp?: string;
   href: Text;
 }
 

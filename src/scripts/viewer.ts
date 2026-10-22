@@ -34,6 +34,7 @@ export function initViewer() {
   const lineEl = dialog.querySelector<HTMLElement>('.viewer-info .line')!;
   const techEl = dialog.querySelector<HTMLElement>('.viewer-info .tech')!;
   const noteEl = dialog.querySelector<HTMLElement>('.viewer-info .note')!;
+  const stampEl = frame.querySelector<HTMLElement>('.stamp');
   const more = dialog.querySelector<HTMLButtonElement>('.viewer-info .more')!;
   const standalone = data.page === 'plate';
 
@@ -100,6 +101,7 @@ export function initViewer() {
 
   function describe(p: ViewPhoto) {
     nEl.textContent = p.n;
+    if (stampEl) stampEl.textContent = p.stamp ?? '';
     lineEl.replaceChildren(bilingual(p.line));
     techEl.textContent = p.tech;
     noteEl.replaceChildren(p.note ? bilingual(p.note) : '');
@@ -263,14 +265,14 @@ export function initViewer() {
     const me = e as MouseEvent;
     if (me.metaKey || me.ctrlKey || me.shiftKey || me.altKey || me.button !== 0) return;
     const target = e.target as Element;
-    const ph = target.closest<HTMLElement>('.seq .ph[data-id]');
-    const listed = target.closest<HTMLElement>('.plates [data-open]');
-    const id = ph?.dataset.id ?? listed?.dataset.open;
-    if (!id) return;
+    const hit = target.closest<HTMLElement>('.seq [data-id], .roll [data-open]');
+    const id = hit?.dataset.id ?? hit?.dataset.open;
+    if (!hit || !id) return;
     const i = photos.findIndex((p) => p.id === id);
     if (i < 0) return;
     e.preventDefault();
-    show(i, ph ?? thumbFor(id), true);
+    // Open out of whatever was pressed: the photograph in the sequence, or its thumbnail in the roll.
+    show(i, hit.closest('.roll') ? hit : thumbFor(id), true);
   });
 
   dialog.querySelector('.viewer-hit.prev')!.addEventListener('click', () => !suppressClick && step(-1));

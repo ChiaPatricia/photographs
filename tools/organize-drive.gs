@@ -14,6 +14,7 @@ const FOLDER_ID = 'PASTE-THE-FOLDER-ID-HERE';
 const PLAN = {
   "01-leaves": [
     "_MG_2729.JPG",
+    "_MG_2796.JPG",
     "_MG_2798.JPG",
     "_MG_2810.JPG",
     "_MG_2813.jpg",
@@ -26,7 +27,6 @@ const PLAN = {
   "01-leaves/_hold": [
     "_MG_2786.JPG",
     "_MG_2793.JPG",
-    "_MG_2796.JPG",
     "_MG_2797.JPG",
     "_MG_2817.JPG",
     "_MG_2819.JPG",
@@ -58,6 +58,7 @@ const PLAN = {
     "_MG_2942.JPG",
     "_MG_2979.JPG",
     "_MG_2998.JPG",
+    "_MG_3002.JPG",
     "_MG_3004.JPG",
     "_MG_3015.JPG",
     "_MG_3023.JPG",
@@ -73,7 +74,6 @@ const PLAN = {
     "_MG_2978.JPG",
     "_MG_2996.JPG",
     "_MG_3001.JPG",
-    "_MG_3002.JPG",
     "_MG_3003.JPG",
     "_MG_3010.JPG",
     "_MG_3014.JPG",

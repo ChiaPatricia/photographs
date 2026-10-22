@@ -13,7 +13,9 @@ import {
   photoCount,
   plateHref,
   plateLabel,
+  media,
   span,
+  stampText,
   technical,
   type Collection,
 } from '../lib/archive';
@@ -32,7 +34,7 @@ const next = collections[c.number % collections.length];
 const plate = (p: (typeof c.photos)[number]) => ({ en: plateHref('en', c, p), zh: plateHref('zh', c, p) });
 
 const data = {
-  collection: { slug: c.slug, number: c.number, behaviour: (c as any).behaviour ?? null, href: { en: collectionHref('en', c), zh: collectionHref('zh', c) } },
+  collection: { slug: c.slug, number: c.number, behaviour: c.behaviour, href: { en: collectionHref('en', c), zh: collectionHref('zh', c) } },
   photos: c.photos.map((p) => ({
     id: p.id,
     hash: p.hash,
@@ -47,19 +49,13 @@ const data = {
     tech: technical(p),
     note: p.note,
     n: plateLabel(c, p),
+    stamp: stampText(p),
     href: plate(p),
   })),
 };
 
-// The plate list repeats a place only when it changes.
-let lastPlace = '';
-const plates = c.photos.map((p, i) => {
-  const place = p.place?.en ?? '';
-  const show = place !== lastPlace;
-  lastPlace = place;
-  return { p, i, show };
-});
 const dates = span(c);
+const thumb = (p: (typeof c.photos)[number]) => p.widths.find((w) => w >= 480) ?? p.widths.at(-1)!;
 ---
 
 <Base
@@ -72,6 +68,7 @@ const dates = span(c);
   image={jpeg(c.photos[0], 1200)}
   data={data}
   current={c.slug}
+  color={c.color ?? undefined}
 >
   <section class="opening" aria-labelledby="title">
     <span class="num">{pad(c.number)}</span>
@@ -80,6 +77,7 @@ const dates = span(c);
       <span class="w" data-l="zh" lang="zh-Hans">{c.word.zh}</span>
       <span class="z" data-l="en" lang="zh-Hans">{c.word.zh}</span>
       <span class="z" data-l="zh" lang="en">{c.word.en}</span>
+      {c.emoji && <span class="sticker e" aria-hidden="true">{c.emoji}</span>}
     </h1>
     <p class="meta small">
       <span><T t={photoCount(c)} /></span>
@@ -88,15 +86,21 @@ const dates = span(c);
     </p>
   </section>
 
-  <div class="seq" data-behaviour={(c as any).behaviour ?? undefined}>
+  <div class="seq" data-behaviour={c.behaviour ?? undefined}>
     {
       spreads.map((s, k) => {
         if (s.kind === 'sentence')
           return (
             <div class={`spread sentence space-${s.space}`}>
-              <p class="serif reveal">
-                <Sentence t={c.sentence!} />
-              </p>
+              <aside class="fact reveal">
+                <span class="label">
+                  <span class="e">{c.emoji ?? '✦'}</span>
+                  <T t={ui.fact} />
+                </span>
+                <p class="serif">
+                  <Sentence t={c.sentence!} />
+                </p>
+              </aside>
             </div>
           );
         if (s.kind === 'single')
@@ -111,6 +115,7 @@ const dates = span(c);
                 href={plate(s.photo)}
                 eager={k === 0}
                 priority={k === 0}
+                print={s.size === 'small'}
               />
             </div>
           );
@@ -138,6 +143,7 @@ const dates = span(c);
               sizes={s.style === 'even' ? sizesFor('pair-even', b.ratio, a.ratio) : sizesFor('pair-offset-b', b.ratio)}
               href={plate(b)}
               delay={160}
+              print={s.style === 'offset'}
             />
           </div>
         );
@@ -145,16 +151,20 @@ const dates = span(c);
     }
   </div>
 
-  <section class="plates small" aria-labelledby="plates-title">
-    <h2 id="plates-title" class="small"><T t={ui.plates} /></h2>
+  <section class="roll" aria-labelledby="roll-title" data-color={c.color ?? undefined}>
+    <div class="roll-head">
+      <h2 id="roll-title" class="pill"><span class="e">📸</span><T t={ui.roll} /> · {c.photos.length}</h2>
+    </div>
     <ol>
       {
-        plates.map(({ p, i, show }) => (
+        c.photos.map((p) => (
           <li data-id={p.id}>
-            <a href={plate(p)[lang]} data-href-en={plate(p).en} data-href-zh={plate(p).zh} data-open={p.id}>
-              <span class="n">{pad(i + 1)}</span>
-              <span>{time(p.taken)}</span>
-              {show && p.place && <T t={p.place} />}
+            <a href={plate(p)[lang]} data-href-en={plate(p).en} data-href-zh={plate(p).zh} data-open={p.id} style={`--c:${p.color}`} data-cursor="open">
+              <picture>
+                <source type="image/avif" srcset={media(p, thumb(p), 'avif')} />
+                <img src={media(p, Math.min(thumb(p), 1200), 'jpg')} alt="" width={p.w} height={p.h} loading="lazy" decoding="async" />
+              </picture>
+              {stampText(p) && <span class="stamp" aria-hidden="true">{stampText(p)}</span>}
             </a>
           </li>
         ))
@@ -162,13 +172,14 @@ const dates = span(c);
     </ol>
   </section>
 
-  <nav class="next small" aria-label="Next">
+  <nav class="next small" aria-label="Next" data-color={next.color ?? undefined}>
     <a class="to" href={collectionHref(lang, next)} data-href-en={collectionHref('en', next)} data-href-zh={collectionHref('zh', next)}>
       <span class="muted">
         <T t={ui.next} /> · {pad(next.number)}
       </span>
       <span class="w serif">
         <T t={next.word} />
+        {next.emoji && <span class="sticker e" aria-hidden="true">{next.emoji}</span>}
       </span>
     </a>
   </nav>

@@ -1,25 +1,18 @@
 ---
-// Kept to a photograph and a few facts. The facts are read from the archive itself.
+// A photograph and a name. Nothing to read unless Jia adds a line in content/site.yaml.
 import Base from '../layouts/Base.astro';
 import T from './T.astro';
 import Photo from './Photo.astro';
-import { aboutHref, archive, facts, plateHref, resolve, site } from '../lib/archive';
-import { count, ui, type Lang } from '../lib/i18n';
+import { aboutHref, archive, plateHref, resolve, site } from '../lib/archive';
+import { ui, type Lang } from '../lib/i18n';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const f = facts();
 const pic = resolve(archive.about.photo);
 const fragment = archive.about.fragment?.en || archive.about.fragment?.zh ? archive.about.fragment : null;
-const when =
-  f.first && f.last
-    ? f.days > 1
-      ? { en: `${f.first.en} – ${f.last.en}`, zh: `${f.first.zh}至${f.last.zh}` }
-      : f.first
-    : null;
 ---
 
 <Base lang={lang} page="about" title={{ en: 'About — Jia', zh: '关于 — Jia' }} path={{ en: aboutHref('en'), zh: aboutHref('zh') }}>
@@ -30,9 +23,10 @@ const when =
           photo={pic.photo}
           collection={pic.collection}
           lang={lang}
-          sizes="(max-width: 699px) 62vw, 22vw"
+          sizes="(max-width: 699px) 64vw, 30vw"
           href={{ en: plateHref('en', pic.collection, pic.photo), zh: plateHref('zh', pic.collection, pic.photo) }}
           eager
+          print
         />
       )
     }
@@ -45,36 +39,24 @@ const when =
           </p>
         )
       }
-      <dl class="facts small">
-        <dt><T t={{ en: 'Photographs', zh: '照片' }} /></dt>
-        <dd>
-          <T t={count(f.total)} />{when && <>, <T t={when} /></>}
-        </dd>
-        <dt><T t={{ en: 'Cameras', zh: '相机' }} /></dt>
-        <dd>{f.cameras.join(', ')}</dd>
-        <dt><T t={{ en: 'Lens', zh: '镜头' }} /></dt>
-        <dd>{f.lenses.join(', ')}</dd>
-        <dt><T t={{ en: 'Type', zh: '字体' }} /></dt>
-        <dd><T t={ui.set} /></dd>
-        <dt><T t={{ en: 'Keys', zh: '按键' }} /></dt>
-        <dd><T t={ui.keys} /></dd>
-        {
-          site.contact?.email && (
-            <>
-              <dt><T t={{ en: 'Write', zh: '联系' }} /></dt>
-              <dd><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></dd>
-            </>
-          )
-        }
-        {
-          site.contact?.instagram && (
-            <>
-              <dt>Instagram</dt>
-              <dd><a href={`https://www.instagram.com/${site.contact.instagram.replace(/^@/, '')}/`}>{site.contact.instagram}</a></dd>
-            </>
-          )
-        }
-      </dl>
+      <p class="links">
+        <a class="pill" href="https://luckyjiaxu.com/" data-href-en="https://luckyjiaxu.com/" data-href-zh="https://luckyjiaxu.com/zh/">
+          <span class="e">🏡</span>
+          <T t={ui.home} />
+        </a>
+        {site.contact?.email && (
+          <a class="pill" href={`mailto:${site.contact.email}`}>
+            <span class="e">✉️</span>
+            {site.contact.email}
+          </a>
+        )}
+        {site.contact?.instagram && (
+          <a class="pill" href={`https://www.instagram.com/${site.contact.instagram.replace(/^@/, '')}/`}>
+            <span class="e">📷</span>
+            {site.contact.instagram}
+          </a>
+        )}
+      </p>
     </div>
   </div>
 </Base>

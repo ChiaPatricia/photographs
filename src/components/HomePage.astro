@@ -8,11 +8,13 @@ import {
   collections,
   home,
   jpeg,
+  latest,
   minutes,
   photoCount,
   plateHref,
   resolve,
   srcset,
+  stampText,
 } from '../lib/archive';
 import { count, time, ui, type Lang } from '../lib/i18n';
 
@@ -23,32 +25,55 @@ interface Props {
 const { lang } = Astro.props;
 const pad = (n: number) => String(n).padStart(2, '0');
 
-// The cover: whichever photograph in the pool was taken closest to the visitor's time of day.
+// The pile: every photograph in the cover pool, as loose prints. The one taken closest to the
+// visitor's time of day ends up on top (chosen by the inline script below, before paint).
 const fallback = resolve(archive.cover.default) ?? { collection: collections[0], photo: collections[0].photos[0] };
 const pool = (archive.cover.pool.length ? archive.cover.pool : [archive.cover.default]).map(resolve).filter((x) => x !== null);
-const covers = pool.map(({ collection: c, photo: p }) => ({
-  min: minutes(p),
-  r: p.ratio,
-  color: p.color,
-  lqip: p.lqip,
-  avif: srcset(p, 'avif'),
-  jpg: srcset(p, 'jpg'),
-  src: jpeg(p, 1200),
-  w: p.w,
-  h: p.h,
-  alt: altText(c, p),
-  word: c.word,
-  time: time(p.taken),
-  href: { en: plateHref('en', c, p), zh: plateHref('zh', c, p) },
-}));
-const d = fallback;
-const dSizes = `(max-width: 699px) calc(100vw - 40px), min(76vw, calc(68vh * ${d.photo.ratio.toFixed(3)}))`;
+const prints = [fallback, ...pool.filter((x) => x.photo.id !== fallback.photo.id)].slice(0, 11);
+
+// Where each print lies: x, y (% of the pile), tilt, width in vw on wide screens (landscape),
+// and the tilt on phones, where the prints form a stack instead.
+const SLOTS = [
+  [56, 66, -2, 25],
+  [16, 30, -7, 18],
+  [85, 26, 6, 17],
+  [13, 76, 5, 16],
+  [88, 74, -5, 17],
+  [33, 88, -3, 14],
+  [74, 90, 4, 14],
+  [30, 12, 3, 13],
+  [69, 10, -4, 13],
+  [4, 50, -9, 12],
+  [96, 50, 8, 12],
+];
+const STACK_TILT = [-2, 4, -5, 3, -4, 6, -3, 5, -6, 2, -1];
+
+const items = prints.map(({ collection: c, photo: p }, i) => {
+  const [x, y, rot, wl] = SLOTS[i];
+  const portrait = p.ratio < 1;
+  return {
+    c,
+    p,
+    min: minutes(p),
+    pw: +(portrait ? wl * 0.66 : wl).toFixed(2),
+    pm: portrait ? 56 : 76,
+    x,
+    y,
+    rot,
+    rotm: STACK_TILT[i],
+    z: 100 - i,
+    href: { en: plateHref('en', c, p), zh: plateHref('zh', c, p) },
+    alt: altText(c, p),
+  };
+});
 
 // Small versions of every photograph, for skimming through a collection from the index.
 const previews = Object.fromEntries(
-  collections.map((c) => [c.slug, c.photos.map((p) => ({ h: p.hash, r: p.ratio, ws: p.widths.filter((w) => w <= 1200) }))]),
+  collections.map((c) => [c.slug, c.photos.map((p) => ({ h: p.hash, r: p.ratio, ws: p.widths.filter((w) => w <= 1200), s: stampText(p) }))]),
 );
 const total = collections.reduce((n, c) => n + c.photos.length, 0);
+const newest = latest();
+const groups = { en: `${collections.length} collections`, zh: `${collections.length} 组` };
 ---
 
 <Base
@@ -56,79 +81,131 @@ const total = collections.reduce((n, c) => n + c.photos.length, 0);
   page="home"
   title={{ en: 'Jia — Photographs', zh: 'Jia — 照片' }}
   path={{ en: home('en'), zh: home('zh') }}
-  image={jpeg(d.photo, 1200)}
+  image={jpeg(fallback.photo, 1200)}
   data={{ previews }}
+  color="tomato"
 >
-  <section class="cover" aria-label="Cover">
-    <figure data-cover class="js-only">
-      <a class="ph reveal" data-cover-link>
-        <picture>
-          <source type="image/avif" />
-          <img alt="" fetchpriority="high" decoding="async" onload="this.classList.add('is-loaded')" />
-        </picture>
-      </a>
-      <figcaption class="small">
-        <span class="word"></span>
-        <span class="time"></span>
-      </figcaption>
-    </figure>
-    <script is:inline type="application/json" id="covers" set:html={JSON.stringify(covers).replace(/</g, '\\u003c')} />
+  <section class="dump" aria-label="Photographs">
+    <p class="dump-name" aria-hidden="true">Jia</p>
+    <div class="pile" data-pile>
+      {
+        items.map((it, i) => (
+          <a
+            class:list={['print', i === 0 && 'is-top']}
+            href={it.href[lang]}
+            data-href-en={it.href.en}
+            data-href-zh={it.href.zh}
+            data-min={it.min ?? ''}
+            data-cursor="move"
+            style={`--x:${it.x};--y:${it.y};--rot:${it.rot}deg;--rotm:${it.rotm}deg;--pw:${it.pw};--pm:${it.pm};--z:${it.z};--i:${i}`}
+          >
+            <div class="ph" style={`--r:${it.p.ratio};--c:${it.p.color};background-image:url(${it.p.lqip})`}>
+              <picture>
+                <source type="image/avif" data-srcset={srcset(it.p, 'avif')} />
+                <img
+                  data-src={jpeg(it.p, 1200)}
+                  data-srcset={srcset(it.p, 'jpg')}
+                  width={it.p.w}
+                  height={it.p.h}
+                  alt={it.alt[lang]}
+                  data-alt-en={it.alt.en}
+                  data-alt-zh={it.alt.zh}
+                  decoding="async"
+                  draggable="false"
+                  onload="this.classList.add('is-loaded')"
+                />
+              </picture>
+              <noscript>
+                <img src={jpeg(it.p, 800)} width={it.p.w} height={it.p.h} alt={it.alt[lang]} />
+              </noscript>
+            </div>
+            {stampText(it.p) && <span class="stamp" aria-hidden="true">{stampText(it.p)}</span>}
+            <span class="cap small">
+              <T t={it.c.word} /> · {time(it.p.taken)}
+            </span>
+          </a>
+        ))
+      }
+    </div>
     <script is:inline>
+      // Before first paint: the print taken nearest to now goes on top, then every print gets
+      // its image at the right size (so nothing is downloaded twice).
       (function () {
-        var list = JSON.parse(document.getElementById('covers').textContent);
-        if (!list.length) return;
+        var pile = document.querySelector('[data-pile]');
+        var prints = Array.prototype.slice.call(pile.querySelectorAll('.print'));
         var now = new Date();
         var m = now.getHours() * 60 + now.getMinutes();
-        var dist = list.map(function (c) {
-          if (c.min == null) return 1e9;
-          var x = Math.abs(c.min - m);
-          return Math.min(x, 1440 - x);
+        var dist = prints.map(function (p) {
+          var v = p.getAttribute('data-min');
+          if (v === '') return 1e9;
+          var d = Math.abs(+v - m);
+          return Math.min(d, 1440 - d);
         });
         var best = Math.min.apply(null, dist);
-        // Photographs within a quarter of an hour of the closest one take turns.
-        var near = list.filter(function (_, i) { return dist[i] <= best + 15; });
-        var c = near[Math.floor(Math.random() * near.length)];
-        var lang = document.documentElement.dataset.lang;
-        var fig = document.querySelector('[data-cover]');
-        var a = fig.querySelector('a');
-        var img = fig.querySelector('img');
-        var sizes = '(max-width: 699px) calc(100vw - 40px), min(76vw, calc(68vh * ' + c.r.toFixed(3) + '))';
-        a.style.cssText = '--r:' + c.r + ';--c:' + c.color + ';background-image:url(' + c.lqip + ')';
-        a.href = c.href[lang];
-        a.dataset.hrefEn = c.href.en;
-        a.dataset.hrefZh = c.href.zh;
-        fig.querySelector('source').setAttribute('sizes', sizes);
-        fig.querySelector('source').setAttribute('srcset', c.avif);
-        img.setAttribute('sizes', sizes);
-        img.setAttribute('srcset', c.jpg);
-        img.width = c.w;
-        img.height = c.h;
-        img.src = c.src;
-        img.alt = c.alt[lang];
-        img.dataset.altEn = c.alt.en;
-        img.dataset.altZh = c.alt.zh;
-        var word = fig.querySelector('.word');
-        word.innerHTML = '<span data-l="en" lang="en"></span><span data-l="zh" lang="zh-Hans"></span>';
-        word.children[0].textContent = c.word.en;
-        word.children[1].textContent = c.word.zh;
-        fig.querySelector('.time').textContent = c.time;
+        var near = prints.filter(function (_, i) { return dist[i] <= best + 15; });
+        var pick = near[Math.floor(Math.random() * near.length)];
+        var top = prints[0];
+        if (pick && pick !== top) {
+          ['--x', '--y', '--rot', '--rotm', '--z'].forEach(function (k) {
+            var a = top.style.getPropertyValue(k), b = pick.style.getPropertyValue(k);
+            top.style.setProperty(k, b);
+            pick.style.setProperty(k, a);
+          });
+          // The top print is drawn larger; keep each print's own proportions.
+          var ta = +top.style.getPropertyValue('--pw'), pa = +pick.style.getPropertyValue('--pw');
+          var tp = top.querySelector('.ph').style.getPropertyValue('--r') < 1, pp = pick.querySelector('.ph').style.getPropertyValue('--r') < 1;
+          var big = tp ? ta / 0.66 : ta, small = pp ? pa / 0.66 : pa;
+          top.style.setProperty('--pw', (tp ? small * 0.66 : small).toFixed(2));
+          pick.style.setProperty('--pw', (pp ? big * 0.66 : big).toFixed(2));
+          top.classList.remove('is-top');
+          pick.classList.add('is-top');
+        }
+        var narrow = matchMedia('(max-width: 699px)').matches;
+        prints.forEach(function (p) {
+          var w = narrow ? +p.style.getPropertyValue('--pm') : +p.style.getPropertyValue('--pw');
+          var sizes = Math.ceil(w * innerWidth / 100) + 'px';
+          var source = p.querySelector('source'), img = p.querySelector('img');
+          source.setAttribute('sizes', sizes);
+          source.setAttribute('srcset', source.getAttribute('data-srcset'));
+          img.setAttribute('sizes', sizes);
+          img.setAttribute('srcset', img.getAttribute('data-srcset'));
+          if (p.classList.contains('is-top')) img.setAttribute('fetchpriority', 'high');
+          img.setAttribute('src', img.getAttribute('data-src'));
+        });
       })();
     </script>
-    <noscript>
-      <figure>
-        <a class="ph" href={plateHref(lang, d.collection, d.photo)} style={`--r:${d.photo.ratio};--c:${d.photo.color}`}>
-          <picture>
-            <source type="image/avif" srcset={srcset(d.photo, 'avif')} sizes={dSizes} />
-            <img src={jpeg(d.photo, 1200)} srcset={srcset(d.photo, 'jpg')} sizes={dSizes} width={d.photo.w} height={d.photo.h} alt={altText(d.collection, d.photo)[lang]} />
-          </picture>
-        </a>
-        <figcaption class="small">
-          <span class="word"><T t={d.collection.word} /></span>
-          <span class="time">{time(d.photo.taken)}</span>
-        </figcaption>
-      </figure>
-    </noscript>
+    <div class="dump-meta">
+      <span class="pill"><span class="e">📷</span><T t={count(total)} /></span>
+      <span class="pill"><span class="e">🗂️</span><T t={groups} /></span>
+      {
+        newest && (
+          <span class="pill">
+            <span class="e">🕰️</span>
+            <T t={{ en: `${ui.latestDay.en} ${newest.en}`, zh: `${ui.latestDay.zh} ${newest.zh}` }} />
+          </span>
+        )
+      }
+      <span class="pill soft hint-drag"><span class="e">✋</span><T t={ui.drag} /></span>
+      <span class="pill soft hint-swipe"><span class="e">👆</span><T t={ui.swipe} /></span>
+    </div>
   </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      {
+        [0, 1].map(() =>
+          collections.map((c) => (
+            <span class="item" data-color={c.color ?? undefined}>
+              {c.emoji && <span class="e">{c.emoji}</span>}
+              <span class="w">{c.word.en}</span>
+              <span class="z">{c.word.zh}</span>
+              <span class="star">✦</span>
+            </span>
+          )),
+        )
+      }
+    </div>
+  </div>
 
   <section class="index" aria-labelledby="index-title">
     <div class="index-head small">
@@ -138,11 +215,17 @@ const total = collections.reduce((n, c) => n + c.photos.length, 0);
     <ol>
       {
         collections.map((c) => (
-          <li data-slug={c.slug}>
+          <li data-slug={c.slug} data-color={c.color ?? undefined}>
             <a href={collectionHref(lang, c)} data-href-en={collectionHref('en', c)} data-href-zh={collectionHref('zh', c)} data-slug={c.slug}>
               <span class="num">{pad(c.number)}</span>
-              <span class="w" data-l="en" lang="en">{c.word.en}</span>
-              <span class="w" data-l="zh" lang="zh-Hans">{c.word.zh}</span>
+              <span class="w" data-l="en" lang="en">
+                {c.word.en}
+                {c.emoji && <span class="sticker e" aria-hidden="true">{c.emoji}</span>}
+              </span>
+              <span class="w" data-l="zh" lang="zh-Hans">
+                {c.word.zh}
+                {c.emoji && <span class="sticker e" aria-hidden="true">{c.emoji}</span>}
+              </span>
               <span class="z" data-l="en" lang="zh-Hans">{c.word.zh}</span>
               <span class="z" data-l="zh" lang="en">{c.word.en}</span>
               <span class="k small muted">
@@ -159,6 +242,7 @@ const total = collections.reduce((n, c) => n + c.photos.length, 0);
           <source type="image/avif" />
           <img alt="" decoding="async" />
         </picture>
+        <span class="stamp"></span>
       </div>
       <div class="count small"></div>
     </div>

@@ -52,6 +52,8 @@ function resolveSource() {
 }
 
 const SOURCE = resolveSource();
+// Photographs kept in the repository rather than Drive (e.g. from luckyjiaxu.com), by folder.
+const EXTRA = path.join(ROOT, 'extra');
 const CACHE = path.join(ROOT, '.cache/derivatives');
 const MEDIA = path.join(ROOT, 'public/media');
 const OUT = path.join(ROOT, 'src/data/archive.json');
@@ -247,15 +249,23 @@ const listed = (conf) =>
 
 const jobs = [];
 const claimed = new Set();
-const names = [...new Set([...folderNames, ...Object.keys(config).filter(visibleFolder)])].sort(natural.compare);
-for (const folder of names) {
-  const here = folderNames.includes(folder)
-    ? (await readdir(path.join(SOURCE, folder), { withFileTypes: true }))
+const imagesIn = async (dir) =>
+  (await exists(dir))
+    ? (await readdir(dir, { withFileTypes: true }))
         .filter((e) => e.isFile() && visibleFile(e.name) && IMAGE.test(e.name))
         .map((e) => e.name)
         .sort(natural.compare)
     : [];
+const extraFolders = (await exists(EXTRA)) ? (await readdir(EXTRA, { withFileTypes: true })).filter((e) => e.isDirectory() && visibleFolder(e.name)).map((e) => e.name) : [];
+const names = [...new Set([...folderNames, ...extraFolders, ...Object.keys(config).filter(visibleFolder)])].sort(natural.compare);
+for (const folder of names) {
+  const here = folderNames.includes(folder) ? await imagesIn(path.join(SOURCE, folder)) : [];
   for (const file of here) jobs.push({ folder, file, from: path.join(SOURCE, folder, file) });
+  for (const file of await imagesIn(path.join(EXTRA, folder))) {
+    if (here.includes(file)) continue;
+    here.push(file);
+    jobs.push({ folder, file, from: path.join(EXTRA, folder, file) });
+  }
   // A Drive folder that has not been sorted into collection folders works too: photographs
   // still at the top level are taken from there when this collection's sequence names them.
   for (const file of listed(config[folder])) {
@@ -329,7 +339,7 @@ for (const [folder, photos] of byFolder) {
       lqip: m.lqip,
       color: m.color.hex,
       tone: { l: m.color.l, c: m.color.c, h: m.color.h, a: m.color.a, b: m.color.b },
-      taken: m.taken,
+      taken: extra.taken ? `${String(extra.taken).slice(0, 16)}:00` : m.taken,
       camera: m.camera,
       lens: m.lens,
       exposure: m.exposure,
@@ -391,6 +401,8 @@ for (const [folder, photos] of byFolder) {
     slug,
     status: conf.status ?? (config[folder] ? 'draft' : 'untitled'),
     behaviour: conf.behaviour ?? null,
+    emoji: conf.emoji ?? null,
+    color: conf.color ?? null,
     word: pick(conf.word) ?? { en: working, zh: working },
     sentence: pick(conf.sentence),
     tint: { h: +hue.toFixed(1), c: +c.toFixed(4) },

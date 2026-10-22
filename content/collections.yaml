@@ -9,7 +9,13 @@
 #               a layout hint. Photographs in the folder but not listed here are added
 #               after these, in the order they were taken, with an automatic layout.
 #               Folders that start with "_" (like _hold) never appear on the site.
-#   photos      Optional per-photograph text: alt, place, note.
+#   photos      Optional per-photograph text: alt, place, note, and `taken` (YYYY-MM-DDTHH:MM)
+#               when the file's own time is missing or wrong.
+#
+# Photographs that are not in Drive (for example the ones from luckyjiaxu.com) live in
+# extra/<folder>/ in this repository and are treated as part of that folder.
+#   emoji       A sticker for the collection.
+#   color       One of the colours of luckyjiaxu.com: tomato, orange, yellow, green, blue.
 #   tint        Optional hue (0–360) for the page's faint tint; otherwise taken from the photographs.
 #   behaviour   Optional. `shy`: photographs edge away from a cursor that rushes at them.
 #
@@ -19,6 +25,8 @@
 01-leaves:
   slug: turning
   status: draft
+  emoji: 🍁
+  color: tomato
   word:
     en: Turning
     zh: 转色
@@ -31,7 +39,8 @@
     - { file: _MG_2837.JPG, layout: large, align: left }
     - { pair: [_MG_2818.JPG, _MG_2828.JPG], layout: offset }
     - { file: _MG_2729.JPG, layout: small, align: left }
-    - { file: _MG_2829.JPG, layout: large, align: right }
+    - { file: _MG_2796.JPG, layout: medium, align: right }
+    - { file: _MG_2829.JPG, layout: large, align: left }
     - { file: _MG_2810.JPG, layout: full }
     - { file: _MG_2798.JPG, layout: small, align: center }
   photos:
@@ -47,6 +56,8 @@
       alt: { en: A branch of yellow and orange maple leaves reaching out of the dark., zh: 一枝黄橙相间的槭树叶从暗处伸出来。 }
     _MG_2729.JPG:
       alt: { en: A single orange tree on a lawn under a clear blue sky., zh: 蓝天下，草坪上一棵橙色的树。 }
+    _MG_2796.JPG:
+      alt: { en: Maple leaves turning red and pale green around a dark trunk., zh: 深色树干旁，正在转红和泛白的槭树叶。 }
     _MG_2829.JPG:
       alt: { en: Red maple leaves against a pale sky, a dark mass of branches to one side., zh: 浅色天空下的红色槭树叶，一侧是深色的枝叶。 }
     _MG_2810.JPG:
@@ -57,6 +68,8 @@
 02-animals:
   slug: cache
   status: draft
+  emoji: 🐿️
+  color: green
   behaviour: shy
   word:
     en: Cache
@@ -88,6 +101,8 @@
 03-light:
   slug: glitter
   status: draft
+  emoji: ✨
+  color: blue
   word:
     en: Glitter
     zh: 波光
@@ -103,7 +118,9 @@
     - { pair: [_MG_2942.JPG, _MG_3004.JPG], layout: offset }
     - { file: _MG_2998.JPG, layout: small, align: right }
     - { file: _MG_3023.JPG, layout: large, align: left }
+    - { file: p11.jpg, layout: medium, align: right }
     - { pair: [_MG_3067.JPG, _MG_3053.JPG], layout: even }
+    - { file: _MG_3002.JPG, layout: small, align: left }
     - { file: _MG_3079.JPG, layout: large, align: right }
     - { file: _MG_3094.JPG, layout: medium, align: center }
   photos:
@@ -119,6 +136,11 @@
       alt: { en: A seawall curves out into the calm river, trees along it., zh: 防波堤伸进平静的河面，堤上一排树。 }
     _MG_3023.JPG:
       alt: { en: Two kayakers paddle away under an overhanging branch., zh: 两个人划着皮划艇远去，头顶垂着一根树枝。 }
+    p11.jpg:
+      alt: { en: Late sun on a beach below a hillside, the tide lines bright., zh: 山坡下的海滩，傍晚的阳光照亮一道道潮线。 }
+      place: { en: San Francisco, zh: 旧金山 }
+    _MG_3002.JPG:
+      alt: { en: A man fishing from the grassy shore, two rods against the rocks, the river and hills beyond., zh: 岸边草地上一个钓鱼的人，两根鱼竿靠着石头，远处是河和山。 }
     _MG_3067.JPG:
       alt: { en: A tall tree with orange leaves; the lighthouse is small at the bottom of the frame., zh: 一棵高大的树，橙色的叶子；灯塔很小，在画面底部。 }
     _MG_3053.JPG:
@@ -133,16 +155,21 @@
   # pumpkins, the jack-o'-lanterns) were taken out at the photographer's request and are in _hold.
   slug: still
   status: draft
+  emoji: 🌙
+  color: orange
   word:
     en: Still
     zh: 还在
   sentence:
-    en: The bridge that made the lighthouse unnecessary has since been taken down; the lighthouse is still here.
-    zh: 让这座灯塔退役的那座桥，已经拆了；灯塔还在。
+    en: This lighthouse was retired in the 1960s because of a new bridge downriver. That bridge is gone now; the lighthouse is still here.
+    zh: 这座灯塔六十年代就退役了，因为下游修了座新桥。后来那座桥拆了，灯塔还在。
   sequence:
     - { file: _MG_2968.JPG, layout: large, align: left }
     - { file: _MG_2726.JPG, layout: large, align: right }
     - { pair: [_MG_2725.JPG, _MG_2760.JPG], layout: offset }
+    - { file: p3.jpg, layout: medium, align: left }
+    - { file: MG_5079-2.jpg, layout: large, align: right }
+    - { file: MG_5064-2.jpg, layout: small, align: center }
     - { file: _MG_3124.JPG, layout: full }
   photos:
     _MG_2726.JPG:
@@ -161,3 +188,11 @@
     _MG_3124.JPG:
       alt: { en: The bridge at dusk, a ship and a distant skyline beneath it., zh: 黄昏的大桥，桥下一艘船和远处的城市天际线。 }
       place: { en: Sleepy Hollow, New York, zh: 纽约州睡谷 }
+    p3.jpg:
+      alt: { en: A Gothic window and balcony on a pale wall, patterned with sunlight and leaf shadows., zh: 淡色墙上的一扇哥特式窗和小阳台，落满阳光和树影。 }
+    MG_5079-2.jpg:
+      alt: { en: A white lighthouse and its keeper's house on the rocks in late light., zh: 傍晚的光里，礁石上的白色灯塔和守塔人的房子。 }
+      taken: 2025-01-12T15:51
+    MG_5064-2.jpg:
+      alt: { en: A low hill against the evening sky, the moon small above it., zh: 傍晚的天空下一道低矮的山坡，月亮小小地挂在上面。 }
+      taken: 2025-01-12T15:47

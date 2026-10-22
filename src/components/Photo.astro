@@ -1,8 +1,9 @@
 ---
 // One photograph: AVIF with a JPEG fallback, sized by its layout, placed on a blurred
-// placeholder of itself so nothing jumps while it loads.
+// placeholder of itself so nothing jumps while it loads. With `print`, it sits in a white
+// border, tilted a little, with the date stamped in the corner like an old digital camera.
 import type { Collection, Photo } from '../lib/archive';
-import { altText, jpeg, srcset } from '../lib/archive';
+import { altText, jpeg, srcset, stampText, tilt } from '../lib/archive';
 import type { Lang } from '../lib/i18n';
 
 interface Props {
@@ -17,39 +18,79 @@ interface Props {
   reveal?: boolean;
   delay?: number;
   id?: string;
+  print?: boolean;
 }
 
-const { photo: p, collection, lang, sizes, href, eager = false, priority = false, class: className, reveal = true, delay = 0, id } = Astro.props;
+const { photo: p, collection, lang, sizes, href, eager = false, priority = false, class: className, reveal = true, delay = 0, id, print = false } = Astro.props;
 const alt = altText(collection, p);
-const style = `--r:${p.ratio};--c:${p.color};background-image:url(${p.lqip})${delay ? `;--delay:${delay}ms` : ''}`;
-const Tag = href ? 'a' : 'div';
+const frame = `--r:${p.ratio};--c:${p.color};background-image:url(${p.lqip})`;
+const Outer = href ? 'a' : 'div';
+const motion = delay ? `--delay:${delay}ms` : '';
+const stamp = stampText(p);
 ---
 
-<Tag
-  class:list={['ph', reveal && 'reveal', className]}
-  style={style}
-  id={id}
-  data-id={p.id}
-  href={href?.[lang]}
-  data-href-en={href?.en}
-  data-href-zh={href?.zh}
->
-  <picture>
-    <source type="image/avif" srcset={srcset(p, 'avif')} sizes={sizes} />
-    <img
-      src={jpeg(p, 1200)}
-      srcset={srcset(p, 'jpg')}
-      sizes={sizes}
-      width={p.w}
-      height={p.h}
-      alt={alt[lang]}
-      data-alt-en={alt.en}
-      data-alt-zh={alt.zh}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding={eager ? 'auto' : 'async'}
-      fetchpriority={priority ? 'high' : undefined}
-      onload="this.classList.add('is-loaded')"
-      onerror="this.classList.add('is-loaded')"
-    />
-  </picture>
-</Tag>
+{
+  print ? (
+    <Outer
+      class:list={['print', reveal && 'reveal', className]}
+      style={`--rot:${tilt(p.id)}deg;${motion}`}
+      data-id={p.id}
+      href={href?.[lang]}
+      data-href-en={href?.en}
+      data-href-zh={href?.zh}
+      data-cursor="open"
+    >
+      <div class="ph" style={frame} id={id} data-id={p.id}>
+        <picture>
+          <source type="image/avif" srcset={srcset(p, 'avif')} sizes={sizes} />
+          <img
+            src={jpeg(p, 1200)}
+            srcset={srcset(p, 'jpg')}
+            sizes={sizes}
+            width={p.w}
+            height={p.h}
+            alt={alt[lang]}
+            data-alt-en={alt.en}
+            data-alt-zh={alt.zh}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding={eager ? 'auto' : 'async'}
+            fetchpriority={priority ? 'high' : undefined}
+            onload="this.classList.add('is-loaded')"
+            onerror="this.classList.add('is-loaded')"
+          />
+        </picture>
+      </div>
+      {stamp && <span class="stamp" aria-hidden="true">{stamp}</span>}
+    </Outer>
+  ) : (
+    <Outer
+      class:list={['ph', reveal && 'reveal', className]}
+      style={`${frame}${motion ? `;${motion}` : ''}`}
+      id={id}
+      data-id={p.id}
+      href={href?.[lang]}
+      data-href-en={href?.en}
+      data-href-zh={href?.zh}
+      data-cursor={href ? 'open' : undefined}
+    >
+      <picture>
+        <source type="image/avif" srcset={srcset(p, 'avif')} sizes={sizes} />
+        <img
+          src={jpeg(p, 1200)}
+          srcset={srcset(p, 'jpg')}
+          sizes={sizes}
+          width={p.w}
+          height={p.h}
+          alt={alt[lang]}
+          data-alt-en={alt.en}
+          data-alt-zh={alt.zh}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding={eager ? 'auto' : 'async'}
+          fetchpriority={priority ? 'high' : undefined}
+          onload="this.classList.add('is-loaded')"
+          onerror="this.classList.add('is-loaded')"
+        />
+      </picture>
+    </Outer>
+  )
+}

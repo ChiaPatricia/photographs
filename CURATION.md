@@ -17,13 +17,20 @@ Point until after sunset, and the Great Jack O'Lantern Blaze at night.
 What runs through almost every frame: **light from behind** — leaves lit through, sun on the
 water, people in silhouette — and orange against blue.
 
-## Selection — 28 of 75
+## Selection — 30 of 75, plus 4 from luckyjiaxu.com
 
 - One frame per scene. Bursts were compared side by side and by measured sharpness; the sharpest
   frame with the best gesture or composition stays (the squirrel `_MG_2962` over `_MG_2961`, the
   open leaf `_MG_2798` over `_MG_2797`, the painted lamp `_MG_2760` over `_MG_2758`, one sun-glitter
   frame of three, one cyclist of four, one sunset of five).
 - Alternates are in each collection's `_hold` folder; moving one out puts it back on the site.
+  Brought back at Jia's request for "a few more": the leaf close-up `_MG_2796` and the seated
+  fisherman `_MG_3002` (both distinct scenes, not repeats).
+- From the gallery on luckyjiaxu.com (kept in `extra/`, since they are not in Drive): the lighthouse
+  at dusk `MG_5079-2` and the evening hill with the moon `MG_5064-2` (12 January 2025; their files
+  read 04:47–04:51, but the light is mid-afternoon, so the camera clock is taken to be on Beijing
+  time, 13 hours ahead of New England in winter — corrected in `collections.yaml`), the Gothic window
+  `p3`, and the beach in late sun `p11` (San Francisco, 13 November 2024).
 - Taken out at Jia's request: the Sleepy Hollow Halloween photographs — the village sign
   (`_MG_2882`), the skeleton horse (`_MG_2883`), the clock with pumpkins (`_MG_2884`) and the
   jack-o'-lanterns (`PA180122`, `PA180139`).
@@ -71,13 +78,15 @@ Sequenced from green to red, ending on a single leaf held up in a hand.
   25 Aug – 25 Sep 1951; mean-square slope grows linearly with wind speed. Munk 2009,
   *Annu Rev Mar Sci* 1:377.
 
-### 04 · Still · 还在 — the lighthouse and the new bridge, a Gothic window, a dining room, a lamp, the bridge at dusk (5)
+### 04 · Still · 还在 — lighthouses, Gothic windows, a dining room, a lamp, the moon, the bridge at dusk (8)
 
 "Still": still here, stillness, a still photograph. 还在: still here.
 
-> The bridge that made the lighthouse unnecessary has since been taken down; the lighthouse is still here.
+> This lighthouse was retired in the 1960s because of a new bridge downriver. That bridge is gone now; the lighthouse is still here.
 >
-> 让这座灯塔退役的那座桥，已经拆了；灯塔还在。
+> 这座灯塔六十年代就退役了，因为下游修了座新桥。后来那座桥拆了，灯塔还在。
+
+(Rewritten in plain words after Jia found the first, compressed version confusing.)
 
 - Tarrytown (Sleepy Hollow) Light, first lit 1 October 1883; the Tappan Zee Bridge (opened 1955)
   made it obsolete (US Coast Guard history: history.uscg.mil, "Tarrytown Lighthouse"). The 1955

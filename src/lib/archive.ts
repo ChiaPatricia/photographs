@@ -33,6 +33,9 @@ export interface Collection {
   folder: string;
   slug: string;
   number: number;
+  emoji: string | null;
+  color: 'tomato' | 'orange' | 'yellow' | 'green' | 'blue' | null;
+  behaviour: string | null;
   status: 'draft' | 'final' | 'untitled';
   word: Text;
   sentence: Text | null;
@@ -135,6 +138,20 @@ export const altText = (c: Collection, p: Photo): Text =>
   p.alt ?? { en: `${c.word.en}, photograph ${plateNumber(c, p)}`, zh: `${c.word.zh}，第 ${plateNumber(c, p)} 张` };
 
 export const photoCount = (c: Collection) => count(c.photos.length);
+
+/** "'26 10 18": the date as an old digital camera prints it in the corner. */
+export const stampText = (p: Photo) => (p.taken ? `'${p.taken.slice(2, 4)} ${p.taken.slice(5, 7)} ${p.taken.slice(8, 10)}` : '');
+
+/** A small, stable tilt for prints, between 1.2° and 3.4° either way. */
+export function tilt(id: string) {
+  let h = 0;
+  for (const ch of id) h = (h * 33 + ch.charCodeAt(0)) >>> 0;
+  const a = 1.2 + (h % 23) / 10;
+  return h & 1 ? a : -a;
+}
+
+/** The newest day in the archive. */
+export const latest = () => facts().last;
 
 /** Dates covered by a collection, for its opening line. */
 export function span(c: Collection): Text | null {

@@ -8,8 +8,8 @@ export const htmlLang = (lang: Lang) => (lang === 'zh' ? 'zh-Hans' : 'en');
 
 export const ui = {
   index: { en: 'Index', zh: '目录' },
-  about: { en: 'About', zh: '关于' },
-  elsewhere: { en: 'Elsewhere', zh: '别处' },
+  about: { en: 'about', zh: '关于' },
+  elsewhere: { en: 'elsewhere ✦', zh: '别处 ✦' },
   elsewhereHint: { en: 'A photograph you have not seen yet', zh: '去看一张还没看过的' },
   next: { en: 'Next', zh: '下一组' },
   plates: { en: 'Plates', zh: '图版' },
@@ -30,6 +30,14 @@ export const ui = {
     zh: 'Newsreader、Hanken Grotesk、思源宋体',
   },
   rights: { en: 'Photographs © Jia', zh: '照片版权归 Jia 所有' },
+  fact: { en: 'fun fact', zh: '冷知识' },
+  roll: { en: 'camera roll', zh: '相册' },
+  drag: { en: 'drag the prints around', zh: '照片可以拖着玩' },
+  swipe: { en: 'swipe the prints', zh: '照片可以左右滑' },
+  latestDay: { en: 'latest', zh: '最近' },
+  open: { en: 'open ↗', zh: '看看 ↗' },
+  move: { en: 'drag me ✋', zh: '拖一下 ✋' },
+  home: { en: 'luckyjiaxu.com ↗', zh: 'luckyjiaxu.com ↗' },
 } satisfies Record<string, Text>;
 
 export const count = (n: number): Text => ({

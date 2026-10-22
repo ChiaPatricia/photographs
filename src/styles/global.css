@@ -32,6 +32,24 @@
   --ease-in-out: cubic-bezier(0.6, 0, 0.3, 1);
 
   --small: 0.8125rem;
+
+  /* The colours of luckyjiaxu.com, so both sites read as one person's. */
+  --tomato: #e4573d;
+  --orange: #f0862f;
+  --yellow: #efaf1f;
+  --green: #22a06b;
+  --blue: #2d7ff9;
+  --tomato-soft: #fdefec;
+  --orange-soft: #fdf1e5;
+  --yellow-soft: #fbf3dc;
+  --green-soft: #e7f5ef;
+  --blue-soft: #eaf2fe;
+  --accent: var(--tomato);
+  --accent-soft: var(--tomato-soft);
+  --stamp: #ff8a1f; /* the date an old digital camera prints in the corner */
+  --print: #fbfaf7;
+  --line: oklch(89% 0.006 85);
+  --shadow-print: 0 1px 2px rgb(22 24 29 / 0.08), 0 12px 32px -6px rgb(22 24 29 / 0.22);
   color-scheme: light;
 }
 
@@ -49,6 +67,14 @@
     --ink-3: oklch(52% 0.007 85);
     --rule: oklch(30% 0.005 85);
     --veil: oklch(91% 0.005 85 / 0.07);
+    --line: oklch(32% 0.006 85);
+    --tomato-soft: oklch(30% 0.05 32);
+    --orange-soft: oklch(30% 0.05 55);
+    --yellow-soft: oklch(31% 0.05 85);
+    --green-soft: oklch(30% 0.05 160);
+    --blue-soft: oklch(30% 0.05 260);
+    --print: #f2f0eb;
+    --shadow-print: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 36px -8px rgb(0 0 0 / 0.6);
     color-scheme: dark;
   }
 }
@@ -568,19 +594,19 @@ a.ph {
   margin-top: clamp(44px, calc(8 * var(--vh)), 110px);
 }
 
-.size-full > .ph {
+.size-full .ph {
   --w: min(92vw, calc(88 * var(--vh) * var(--r)));
 }
 
-.size-large > .ph {
+.size-large .ph {
   --w: min(64vw, calc(78 * var(--vh) * var(--r)));
 }
 
-.size-medium > .ph {
+.size-medium .ph {
   --w: min(46vw, calc(66 * var(--vh) * var(--r)));
 }
 
-.size-small > .ph {
+.size-small .ph {
   --w: min(26vw, calc(46 * var(--vh) * var(--r)));
 }
 
@@ -1122,15 +1148,15 @@ a.ph {
     margin-top: calc(5 * var(--vh));
   }
 
-  .size-full > .ph {
+  .size-full .ph {
     --w: 100vw;
   }
 
-  .size-full.is-portrait > .ph {
+  .size-full.is-portrait .ph {
     --w: min(calc(100vw - 2 * var(--m)), calc(84 * var(--vh) * var(--r)));
   }
 
-  .size-large > .ph {
+  .size-large .ph {
     --w: min(calc(100vw - var(--m)), calc(80 * var(--vh) * var(--r)));
   }
 
@@ -1142,11 +1168,11 @@ a.ph {
     padding-right: 0;
   }
 
-  .size-medium > .ph {
+  .size-medium .ph {
     --w: min(76vw, calc(70 * var(--vh) * var(--r)));
   }
 
-  .size-small > .ph {
+  .size-small .ph {
     --w: min(56vw, calc(52 * var(--vh) * var(--r)));
   }
 

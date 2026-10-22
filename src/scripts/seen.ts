@@ -28,7 +28,7 @@ export function watchSeen() {
   const slug = data.collection?.slug;
   if (!slug) return;
   const seen = seenSet();
-  document.querySelectorAll<HTMLElement>('.plates li[data-id]').forEach((li) => {
+  document.querySelectorAll<HTMLElement>('.roll li[data-id]').forEach((li) => {
     if (seen.has(`${slug}/${li.dataset.id}`)) li.classList.add('is-seen');
   });
   if (!('IntersectionObserver' in window)) return;

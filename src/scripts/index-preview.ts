@@ -4,7 +4,7 @@
 // and dragging sideways across it flips through.
 import { avifSet, data, finePointer, jpgSet, media, reduced } from './data';
 
-type Preview = { h: string; r: number; ws: number[] };
+type Preview = { h: string; r: number; ws: number[]; s?: string };
 
 const small = (p: Preview) => p.ws.filter((w) => w <= 800);
 
@@ -45,6 +45,7 @@ function desktop(previews: Record<string, Preview[]>, rows: HTMLAnchorElement[])
   const frame = box.querySelector<HTMLElement>('.frame')!;
   const pic = box.querySelector('picture')!;
   const counter = box.querySelector<HTMLElement>('.count')!;
+  const stamp = box.querySelector<HTMLElement>('.stamp');
   let list: Preview[] = [];
   let shown = -1;
   let y = innerHeight / 2;
@@ -63,6 +64,7 @@ function desktop(previews: Record<string, Preview[]>, rows: HTMLAnchorElement[])
     frame.style.backgroundColor = '';
     setPicture(pic, p, w);
     counter.textContent = `${String(i + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}`;
+    if (stamp) stamp.textContent = p.s ?? '';
   };
 
   const position = () => {
@@ -93,7 +95,10 @@ function desktop(previews: Record<string, Preview[]>, rows: HTMLAnchorElement[])
       const r = a.getBoundingClientRect();
       const f = clientX == null ? 0 : (clientX - r.left) / r.width;
       show(Math.min(list.length - 1, Math.max(0, Math.floor(f * list.length))));
-      if (!box.classList.contains('is-on')) y = r.top + r.height / 2;
+      if (!box.classList.contains('is-on')) {
+        y = r.top + r.height / 2;
+        frame.style.setProperty('--rot', `${(Math.random() * 6 - 3).toFixed(1)}deg`);
+      }
       box.classList.add('is-on');
       follow(r.top + r.height / 2);
     };

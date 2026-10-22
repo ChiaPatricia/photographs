@@ -22,9 +22,13 @@ export function switchTo(to: Lang) {
     /* private mode */
   }
   const run = () => apply(to, true);
-  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
-  if (doc.startViewTransition && !reduced()) doc.startViewTransition(run);
-  else run();
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void>; finished: Promise<void> } };
+  if (doc.startViewTransition && !reduced()) {
+    const t = doc.startViewTransition(run);
+    // A skipped transition (hidden tab, another one running) still applies the change.
+    t.ready.catch(() => {});
+    t.finished.catch(() => {});
+  } else run();
 }
 
 function apply(to: Lang, address: boolean) {
